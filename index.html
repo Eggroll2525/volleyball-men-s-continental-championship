@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2026 歐洲排球錦標賽賽程表 (GMT+8)</title>
+    <style>
+        :root {
+            --primary: #0a1128;
+            --table-border: #e0e0e0;
+            --th-bg: #1c2541;
+            --text-dark: #333333;
+            --vs-color: #ff9f1c;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 12px;
+            background-color: #f7f9fc;
+            color: var(--text-dark);
+        }
+        h2 { text-align: center; margin: 10px 0 15px 0; font-size: 1.25rem; color: var(--th-bg); }
+        .filter-container {
+            background: white;
+            padding: 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .filter-group:last-child { margin-bottom: 0; }
+        label { font-size: 0.85rem; font-weight: bold; color: #555; }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            outline: none;
+        }
+        select:focus, input:focus { border-color: var(--th-bg); }
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--table-border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: center;
+            min-width: 320px;
+        }
+        th, td {
+            padding: 12px 6px;
+            border-bottom: 1px solid var(--table-border);
+            border-right: 1px solid var(--table-border);
+        }
+        th:last-child, td:last-child { border-right: none; }
+        th {
+            background-color: var(--th-bg);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            font-size: 0.85rem;
+        }
+        tr:nth-child(even) { background-color: #fcfdfe; }
+        .vs-text { color: var(--vs-color); font-weight: bold; font-size: 0.75rem; margin: 0 2px; }
+    </style>
+</head>
+<body>
+
+    <h2>🏐 2026 歐洲排錦賽 (GMT+8)</h2>
+
+    <div class="filter-container">
+        <div class="filter-group">
+            <label for="dateFilter">📅 按日期篩選：</label>
+            <select id="dateFilter" onchange="filterTable()">
+                <option value="">-- 顯示全部日期 --</option>
+                <option value="09/09">09/09 (三)</option>
+                <option value="09/10">09/10 (四)</option>
+                <option value="09/11">09/11 (五)</option>
+                <option value="09/12">09/12 (六)</option>
+                <option value="09/13">09/13 (日)</option>
+                <option value="09/14">09/14 (一)</option>
+                <option value="09/15">09/15 (二)</option>
+                <option value="09/16">09/16 (三)</option>
+                <option value="09/17">09/17 (四)</option>
+                <option value="09/18">09/18 (五)</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="teamSearch">🔍 輸入國家搜尋：</label>
+            <input type="text" id="teamSearch" onkeyup="filterTable()" placeholder="例如：波蘭、義大利...">
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="matchTable">
+            <thead>
+                <tr>
+                    <th style="width: 28%;">台灣日期</th>
+                    <th style="width: 20%;">時間</th>
+                    <th style="width: 52%;">對戰組合</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-date="09/09"><td>09/09 (三)</td><td>22:00</td><td>保加利亞 <span class="vs-text">VS</span> 北馬其頓</td></tr>
+                <tr data-date="09/10"><td>09/10 (四)</td><td>01:00</td><td>羅馬尼亞 <span class="vs-text">VS</span> 拉脫維亞</td></tr>
+                <tr data-date="09/10"><td>09/10 (四)</td><td>21:00</td><td>波蘭 <span class="vs-text">VS</span> 葡萄牙</td></tr>
+                <tr data-date="09/10"><td>09/10 (四)</td><td>22:00</td><td>法國 <span class="vs-text">VS</span> 瑞士</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>00:00</td><td>以色列 <span class="vs-text">VS</span> 烏克蘭</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>01:00</td><td>芬蘭 <span class="vs-text">VS</span> 丹麥</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>01:00</td><td>土耳其 <span class="vs-text">VS</span> 德國</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>03:05</td><td>義大利 <span class="vs-text">VS</span> 瑞典</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>21:00</td><td>烏克蘭 <span class="vs-text">VS</span> 北馬其頓</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>22:00</td><td>捷克 <span class="vs-text">VS</span> 希臘</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>22:00</td><td>荷蘭 <span class="vs-text">VS</span> 比利時</td></tr>
+                <tr data-date="09/11"><td>09/11 (五)</td><td>22:00</td><td>德國 <span class="vs-text">VS</span> 拉脫維亞</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>00:00</td><td>葡萄牙 <span class="vs-text">VS</span> 保加利亞</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>01:00</td><td>塞爾維亞 <span class="vs-text">VS</span> 愛沙尼亞</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>01:00</td><td>瑞士 <span class="vs-text">VS</span> 羅馬尼亞</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>03:00</td><td>斯洛伐克 <span class="vs-text">VS</span> 斯洛維尼亞</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>21:00</td><td>波蘭 <span class="vs-text">VS</span> 以色列</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>22:00</td><td>瑞典 <span class="vs-text">VS</span> 捷克</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>22:00</td><td>丹麥 <span class="vs-text">VS</span> 荷蘭</td></tr>
+                <tr data-date="09/12"><td>09/12 (六)</td><td>22:00</td><td>法國 <span class="vs-text">VS</span> 土耳其</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>00:00</td><td>烏克蘭 <span class="vs-text">VS</span> 葡萄牙</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>01:00</td><td>比利時 <span class="vs-text">VS</span> 芬蘭</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>01:00</td><td>德國 <span class="vs-text">VS</span> 瑞士</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>03:05</td><td>希臘 <span class="vs-text">VS</span> 義大利</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>21:00</td><td>北馬其頓 <span class="vs-text">VS</span> 波蘭</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>22:00</td><td>斯洛維尼亞 <span class="vs-text">VS</span> 瑞典</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>22:00</td><td>愛沙尼亞 <span class="vs-text">VS</span> 丹麥</td></tr>
+                <tr data-date="09/13"><td>09/13 (日)</td><td>22:00</td><td>拉脫維亞 <span class="vs-text">VS</span> 法國</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>00:00</td><td>保加利亞 <span class="vs-text">VS</span> 烏克蘭</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>01:00</td><td>芬蘭 <span class="vs-text">VS</span> 塞爾維亞</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>01:00</td><td>羅馬尼亞 <span class="vs-text">VS</span> 法國</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>03:05</td><td>義大利 <span class="vs-text">VS</span> 斯洛伐克</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>21:00</td><td>北馬其頓 <span class="vs-text">VS</span> 葡萄牙</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>22:00</td><td>斯洛伐克 <span class="vs-text">VS</span> 捷克</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>22:00</td><td>塞爾維亞 <span class="vs-text">VS</span> 荷蘭</td></tr>
+                <tr data-date="09/14"><td>09/14 (一)</td><td>22:00</td><td>德國 <span class="vs-text">VS</span> 瑞士</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>00:00</td><td>保加利亞 <span class="vs-text">VS</span> 以色列</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>01:00</td><td>愛沙尼亞 <span class="vs-text">VS</span> 比利時</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>01:00</td><td>羅馬尼亞 <span class="vs-text">VS</span> 土耳其</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>03:00</td><td>希臘 <span class="vs-text">VS</span> 瑞典</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>21:00</td><td>以色列 <span class="vs-text">VS</span> 北馬其頓</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>22:00</td><td>捷克 <span class="vs-text">VS</span> 斯洛維尼亞</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>22:00</td><td>比利時 <span class="vs-text">VS</span> 荷蘭</td></tr>
+                <tr data-date="09/15"><td>09/15 (二)</td><td>22:00</td><td>拉脫維亞 <span class="vs-text">VS</span> 瑞士</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>00:00</td><td>烏克蘭 <span class="vs-text">VS</span> 波蘭</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>01:00</td><td>荷蘭 <span class="vs-text">VS</span> 芬蘭</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>01:00</td><td>法國 <span class="vs-text">VS</span> 德國</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>03:05</td><td>斯洛維尼亞 <span class="vs-text">VS</span> 義大利</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>21:00</td><td>希臘 <span class="vs-text">VS</span> 斯洛維尼亞</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>22:00</td><td>瑞典 <span class="vs-text">VS</span> 斯洛伐克</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>22:00</td><td>烏克蘭 <span class="vs-text">VS</span> 波蘭</td></tr>
+                <tr data-date="09/16"><td>09/16 (三)</td><td>22:00</td><td>荷蘭 <span class="vs-text">VS</span> 愛沙尼亞</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>01:00</td><td>丹麥 <span class="vs-text">VS</span> 塞爾維亞</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>01:00</td><td>土耳其 <span class="vs-text">VS</span> 拉脫維亞</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>03:00</td><td>捷克 <span class="vs-text">VS</span> 義大利</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>22:00</td><td>斯洛伐克 <span class="vs-text">VS</span> 希臘</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>22:00</td><td>塞爾維亞 <span class="vs-text">VS</span> 比利時</td></tr>
+                <tr data-date="09/17"><td>09/17 (四)</td><td>22:00</td><td>土耳其 <span class="vs-text">VS</span> 拉脫維亞</td></tr>
+                <tr data-date="09/18"><td>09/18 (五)</td><td>01:00</td><td>芬蘭 <span class="vs-text">VS</span> 愛沙尼亞</td></tr>
+                <tr data-date="09/18"><td>09/18 (五)</td><td>01:00</td><td>法國 <span class="vs-text">VS</span> 羅馬尼亞</td></tr>
+                <tr data-date="09/18"><td>09/18 (五)</td><td>03:05</td><td>義大利 <span class="vs-text">VS</span> 斯洛維尼亞</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filterTable() {
+            var dateSelect = document.getElementById("dateFilter").value;
+            var nameInput = document.getElementById("teamSearch").value.trim().toLowerCase();
+            var table = document.getElementById("matchTable");
+            var tr = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < tr.length; i++) {
+                var row = tr[i];
+                var dateMatch = row.getAttribute("data-date");
+                var cells = row.getElementsByTagName("td");
+                
+                // 確保能正確抓到該列的對戰國家文字
+                var matchText = cells[2] ? cells[2].textContent.toLowerCase() : "";
+
+                var showDate = (dateSelect === "" || dateMatch === dateSelect);
+                var showName = (nameInput === "" || matchText.includes(nameInput));
+
+                if (showDate && showName) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
