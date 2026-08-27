@@ -23,27 +23,64 @@
             color: var(--text-main);
             padding: 12px;
             font-size: 14px;
-            padding-bottom: 70px;
+            overflow-x: hidden;
         }
-        .header-container { text-align: center; margin-bottom: 12px; background: white; padding: 14px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-bottom: 3px solid var(--euro-theme); }
-        body.theme-asia .header-container { border-bottom-color: var(--asia-theme); }
-        h2 { font-size: 1.25rem; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .subtitle { font-size: 0.85rem; color: #475569; font-weight: 500; }
-        .tz-status { font-size: 0.75rem; color: var(--highlight); margin-top: 6px; font-weight: bold; }
-        .control-panel { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-group { display: flex; gap: 8px; }
-        .toggle-btn { flex: 1; padding: 11px; font-size: 0.95rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; cursor: pointer; text-align: center; color: #475569; }
-        .toggle-btn.active.euro { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
-        .toggle-btn.active.asia { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
-        .filter-row { display: flex; gap: 8px; align-items: center; }
-        select { flex: 1; padding: 10px; font-size: 0.95rem; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; outline: none; color: #0f172a; -webkit-appearance: none; }
-        .country-selector { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; max-height: 95px; overflow-y: auto; }
-        .country-chip { display: flex; align-items: center; gap: 4px; background: #fff; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 14px; font-size: 0.8rem; cursor: pointer; user-select: none; color: #334155; }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+            border-bottom: 3px solid var(--euro-theme);
+        }
+        body.theme-asia .navbar { border-bottom-color: var(--asia-theme); }
+        .nav-title-box { text-align: center; flex-grow: 1; }
+        .nav-title { font-size: 1.12rem; font-weight: bold; color: #0f172a; }
+        .nav-subtitle { font-size: 0.72rem; color: #64748b; font-weight: 500; }
+        .menu-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #334155; padding: 4px; display: flex; align-items: center; }
+        
+        /* 側邊欄樣式 */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; box-shadow: 4px 0 15px rgba(0,0,0,0.1); z-index: 10000; transition: left 0.3s ease; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .sidebar.open { left: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; display: none; }
+        .sidebar-overlay.show { display: block; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 4px; }
+        .sidebar-title { font-size: 1rem; font-weight: bold; color: #1e293b; }
+        .sb-group { display: flex; flex-direction: column; gap: 6px; }
+        .sb-label { font-size: 0.8rem; font-weight: bold; color: #64748b; }
+        .sb-toggle-btn { width: 100%; padding: 12px; font-size: 0.95rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; cursor: pointer; text-align: center; color: #475569; }
+        .sb-toggle-btn.active.euro { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
+        .sb-toggle-btn.active.asia { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
+        .lang-btn-sb { width: 100%; padding: 10px; font-size: 0.88rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; }
+
+        /* 主畫面篩選區控制 */
+        .main-filter-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-label { font-size: 0.78rem; font-weight: bold; color: #64748b; }
+        .main-select { width: 100%; padding: 8px 10px; font-size: 0.88rem; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; outline: none; }
+        
+        .country-selector { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; max-height: 120px; overflow-y: auto; }
+        .country-chip { display: flex; align-items: center; gap: 4px; background: #fff; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 14px; font-size: 0.78rem; cursor: pointer; user-select: none; color: #475569; }
         body.theme-euro .country-chip.selected { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
         body.theme-asia .country-chip.selected { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
-        .cal-batch-box { display: flex; gap: 8px; }
-        .cal-btn { flex: 1; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; cursor: pointer; color: #334155; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px; }
-        .table-wrapper { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid var(--border-color); }
+
+        .report-link-box { margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 12px; text-align: center; }
+        .report-text-link { font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 500; }
+        
+        .table-wrapper { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 70px; }
         table { width: 100%; border-collapse: collapse; text-align: center; min-width: 320px; }
         th, td { padding: 12px 4px; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-size: 0.88rem; }
         th:last-child, td:last-child { border-right: none; }
@@ -53,186 +90,226 @@
         body.theme-euro tr:nth-child(even) { background-color: var(--euro-light); }
         body.theme-asia th { background-color: var(--asia-theme); }
         body.theme-asia tr:nth-child(even) { background-color: var(--asia-light); }
-        .flag-box { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; }
-        .flag-box img { width: 18px; height: 12px; object-fit: cover; border: 1px solid #ddd; border-radius: 1px; }
         .vs-label { color: var(--highlight); font-weight: bold; font-size: 0.75rem; margin: 0 3px; }
-        .team-name { font-size: 0.85rem; }
-        .bell-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; padding: 4px; display: inline-flex; align-items: center; justify-content: center; }
-        .report-fab { position: fixed; bottom: 16px; right: 16px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; padding: 10px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: bold; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 6px; z-index: 9999; }
+        .team-text-box { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; }
+        .tz-status-bar { text-align: center; font-size: 0.75rem; color: var(--highlight); font-weight: bold; margin-bottom: 8px; }
+        tr { cursor: pointer; transition: background-color 0.2s; }
+        body.theme-euro tr.selected-row { background-color: #cbd5e1 !important; color: #0b1a30; font-weight: 500; }
+        body.theme-asia tr.selected-row { background-color: #bae6fd !important; color: #005682; font-weight: 500; }
+        .cart-drawer { position: fixed; bottom: -80px; left: 0; width: 100%; background: #ffffff; box-shadow: 0 -3px 12px rgba(0,0,0,0.12); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 9998; transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-top: 1px solid #e2e8f0; }
+        .cart-drawer.active { bottom: 0; }
+        .cart-info { font-size: 0.92rem; font-weight: bold; color: #334155; }
+        .cart-btn { background: #10b981; color: white; border: none; padding: 10px 18px; font-size: 0.88rem; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        body.theme-euro .cart-btn { background: #0b1a30; }
+        body.theme-asia .cart-btn { background: #0077b6; }
     </style>
 </head>
 <body class="theme-euro">
-    <div class="header-container">
-        <h2>🏐 <span id="textTitleMain">2026歐錦賽</span></h2>
-        <div class="subtitle" id="textTitleSub">CEV EuroVolley 2026</div>
-        <div class="tz-status" id="tzStatusText">正在偵測時區...</div>
+    <div class="navbar">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <div class="nav-title-box">
+            <div class="nav-title" id="textTitleMain">2026歐錦賽</div>
+            <div class="nav-subtitle" id="textTitleSub">CEV EuroVolley 2026</div>
+        </div>
+        <div style="width: 24px;"></div> </div>
+    
+    <div class="tz-status-bar" id="tzStatusText">正在偵測時區...</div>
+
+    <div class="main-filter-card">
+        <div class="filter-group">
+            <div class="filter-label" id="mainLblDate">📅 日期篩選 / Date:</div>
+            <select id="dateFilter" class="main-select" onchange="renderTable()"><option value="">-- 全日期 --</option></select>
+        </div>
+        <div class="filter-group">
+            <div class="filter-label" id="mainLblCountry">🔍 國家篩選 (可複選) / Team:</div>
+            <div class="country-selector" id="countryContainer"></div>
+        </div>
     </div>
-    <div class="control-panel">
-        <div class="btn-group">
-            <button class="toggle-btn active euro" id="btnEuro" onclick="switchTournament('euro')">歐錦賽 / EuroVolley</button>
-            <button class="toggle-btn asia" id="btnAsia" onclick="switchTournament('asia')">亞錦賽 / AVC</button>
-        </div>
-        <div class="filter-row">
-            <select id="dateFilter" onchange="renderTable()"><option value="">-- 全日期 --</option></select>
-            <button class="toggle-btn" style="flex:0 0 95px; padding:10px 4px; font-size:0.85rem;" id="btnLang" onclick="toggleLanguage()">中文 / Eng</button>
-        </div>
-        <div class="country-selector" id="countryContainer"></div>
-        <div class="cal-batch-box">
-            <button class="cal-btn" onclick="addFilteredToCalendar()"><span id="btnCalFiltered">📁 加入目前篩選賽程</span></button>
-            <button class="cal-btn" onclick="addAllToCalendar()"><span id="btnCalAll">📥 加入此賽事全部賽程</span></button>
-        </div>
-    </div>
+
     <div class="table-wrapper">
         <table>
             <thead>
                 <tr>
-                    <th style="width: 25%;" id="thDate">日期</th>
-                    <th style="width: 18%;" id="thTime">時間</th>
-                    <th style="width: 45%;" id="thMatch">對戰組合</th>
-                    <th style="width: 12%;">⏰</th>
+                    <th style="width: 28%;" id="thDate">日期</th>
+                    <th style="width: 20%;" id="thTime">時間</th>
+                    <th style="width: 52%;" id="thMatch">對戰組合</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <a href="https://www.instagram.com/eggroll.25/" target="_blank" class="report-fab">💬 回報問題 / Report Bug</a>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title" id="sbMenuTitle">賽事選單 / Menu</div>
+            <button class="menu-btn" style="font-size:1.2rem;" onclick="toggleSidebar()">✕</button>
+        </div>
+        <div class="sb-group">
+            <div class="sb-label" id="sbLblTour">🏆 選擇賽事 / Tournament:</div>
+            <button class="sb-toggle-btn active euro" id="btnEuro" onclick="switchTournament('euro')">歐錦賽 / EuroVolley</button>
+            <button class="sb-toggle-btn asia" id="btnAsia" onclick="switchTournament('asia')">亞錦賽 / AVC</button>
+        </div>
+        <div class="sb-group">
+            <div class="sb-label" id="sbLblLang">🌐 語言 / Language:</div>
+            <button class="lang-btn-sb" id="btnLang" onclick="toggleLanguage()">切換語言 (中文 / English)</button>
+        </div>
+        <div class="sb-group" style="margin-top: 8px;">
+            <button class="sb-toggle-btn" style="background:#f1f5f9; border-color:#cbd5e1; color:#1e293b; padding:10px; font-size:0.85rem;" onclick="handleSmartCalendarBatch()"><span id="btnCalSmart">📅 一鍵加入此賽事全部賽程</span></button>
+        </div>
+        <div class="report-link-box">
+            <a href="https://instagram.com" target="_blank" class="report-text-link">⚠️ 回報問題 / Report Bug</a>
+        </div>
+    </div>
+
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-info" id="cartInfoText">🛒 已選取 0 場比賽</div>
+        <button class="cart-btn" onclick="handleCartCalendarExport()">📅 <span id="btnCartGo">加入行事曆</span></button>
+    </div>
+
     <script>
         const rawData = {
             euro: [
-                { utc: "2026-09-09T14:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "bg", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "mk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-09T17:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_f: "ro", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "lv", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "pl", a_zh: "葡萄牙", a_en: "Portugal", a_f: "pt", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "fr", a_zh: "瑞士", a_en: "Switzerland", a_f: "ch", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T16:00:00Z", h_zh: "以色列", h_en: "Israel", h_f: "il", a_zh: "烏克蘭", a_en: "Ukraine", a_f: "ua", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "fi", a_zh: "丹麥", a_en: "Denmark", a_f: "dk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "tr", a_zh: "德國", a_en: "Germany", a_f: "de", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-10T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "it", a_zh: "瑞典", a_en: "Sweden", a_f: "se", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" }
-                ,{ utc: "2026-09-11T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "ua", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "mk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T14:00:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "cz", a_zh: "希臘", a_en: "Greece", a_f: "gr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T14:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "nl", a_zh: "比利時", a_en: "Belgium", a_f: "be", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T14:00:00Z", h_zh: "德國", h_en: "Germany", h_f: "de", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "lv", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "pl", a_zh: "以色列", a_en: "Israel", a_f: "il", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T17:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_f: "se", a_zh: "捷克", a_en: "Czechia", a_f: "cz", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T17:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_f: "dk", a_zh: "荷蘭", a_en: "Netherlands", h_f: "nl", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-11T19:00:00Z", h_zh: "法國", h_en: "France", h_f: "fr", a_zh: "土耳其", a_en: "Turkey", a_f: "tr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-12T13:00:00Z", h_zh: "葡萄牙", h_en: "Portugal", h_f: "pt", a_zh: "保加利亞", a_en: "Bulgaria", a_f: "bg", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-12T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_f: "sk", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "si", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-12T14:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_f: "ee", a_zh: "丹麥", a_en: "Denmark", a_f: "dk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-12T16:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_f: "mk", a_zh: "波蘭", a_en: "Poland", a_f: "pl", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" }
-                ,{ utc: "2026-09-12T17:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_f: "lv", a_zh: "法國", a_en: "France", a_f: "fr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "ua", a_zh: "葡萄牙", a_en: "Portugal", a_f: "pt", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T14:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_f: "si", a_zh: "瑞典", a_en: "Sweden", a_f: "se", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T14:00:00Z", h_zh: "比利時", h_en: "Belgium", h_f: "be", a_zh: "芬蘭", a_en: "Finland", a_f: "fi", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "bg", a_zh: "烏克蘭", a_en: "Ukraine", a_f: "ua", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T17:00:00Z", h_zh: "德國", h_en: "Germany", h_f: "de", a_zh: "瑞士", a_en: "Switzerland", a_f: "ch", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-13T19:05:00Z", h_zh: "希臘", h_en: "Greece", h_f: "gr", a_zh: "義大利", a_en: "Italy", a_f: "it", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T13:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_f: "mk", a_zh: "葡萄牙", a_en: "Portugal", a_f: "pt", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T14:00:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "cz", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "si", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T14:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "fi", a_zh: "塞爾維亞", a_en: "Serbia", a_f: "rs", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T14:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_f: "ro", a_zh: "土耳其", a_en: "Turkey", a_f: "tr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "bg", a_zh: "以色列", a_en: "Israel", a_f: "il", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T17:00:00Z", h_zh: "比利時", h_en: "Belgium", h_f: "be", a_zh: "荷蘭", a_en: "Netherlands", h_f: "nl", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T17:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_f: "lv", a_zh: "瑞士", a_en: "Switzerland", a_f: "ch", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-14T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "it", a_zh: "斯洛伐克", a_en: "Slovakia", a_f: "sk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-15T14:00:00Z", h_zh: "希臘", h_en: "Greece", h_f: "gr", a_zh: "瑞典", a_en: "Sweden", a_f: "se", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-15T14:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_f: "ee", a_zh: "比利時", a_en: "Belgium", a_f: "be", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-15T16:00:00Z", h_zh: "以色列", h_en: "Israel", h_f: "il", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "mk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-15T17:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "nl", a_zh: "芬蘭", a_en: "Finland", a_f: "fi", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T14:00:00Z", h_zh: "希臘", h_en: "Greece", h_f: "gr", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "si", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_f: "rs", a_zh: "荷蘭", a_en: "Netherlands", a_f: "nl", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "fr", a_zh: "德國", a_en: "Germany", a_f: "de", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T16:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "ua", a_zh: "波蘭", a_en: "Poland", a_f: "pl", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T17:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_f: "dk", a_zh: "塞爾維亞", a_en: "Serbia", a_f: "rs", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "tr", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "lv", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-16T19:05:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_f: "si", a_zh: "義大利", a_en: "Italy", a_f: "it", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T14:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_f: "se", a_zh: "斯洛伐克", a_en: "Slovakia", a_f: "sk", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T14:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "nl", a_zh: "愛沙尼亞", a_en: "Estonia", a_f: "ee", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "fr", a_zh: "羅馬尼亞", a_en: "Romania", a_f: "ro", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "pl", a_zh: "保加利亞", a_en: "Bulgaria", a_f: "bg", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "fi", a_zh: "愛沙尼亞", a_en: "Estonia", a_f: "ee", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "tr", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "lv", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-17T19:05:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "cz", a_zh: "義大利", a_en: "Italy", a_f: "it", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-18T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_f: "sk", a_zh: "希臘", a_en: "Greece", a_f: "gr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-18T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_f: "rs", a_zh: "比利時", a_en: "Belgium", a_f: "be", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-18T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "it", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "si", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { local_d: "09/19", local_w: "六", local_w_en: "Sat", zh_name: "1/8 決賽 (1/8F)", en_name: "Round of 16 (1/8F)", type: "stage" },
-                { local_d: "09/20", local_w: "日", local_w_en: "Sun", zh_name: "1/8 決賽 (1/8F)", en_name: "Round of 16 (1/8F)", type: "stage" },
-                { local_d: "09/21", local_w: "一", local_w_en: "Mon", zh_name: "1/8 決賽 (1/8F)", en_name: "Round of 16 (1/8F)", type: "stage" },
-                { local_d: "09/22", local_w: "二", local_w_en: "Tue", zh_name: "半準決賽 (1/4F)", en_name: "Quarter-finals (1/4F)", type: "stage" },
-                { local_d: "09/23", local_w: "三", local_w_en: "Wed", zh_name: "半準決賽 (1/4F)", en_name: "Quarter-finals (1/4F)", type: "stage" },
-                { local_d: "09/25", local_w: "五", local_w_en: "Fri", zh_name: "準決賽", en_name: "Semi-finals", type: "stage" },
+                { id: "e1", utc: "2026-09-09T14:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "🇧🇬", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e2", utc: "2026-09-09T17:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_f: "🇷🇴", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e3", utc: "2026-09-10T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "🇵🇱", a_zh: "葡萄牙", a_en: "Portugal", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e4", utc: "2026-09-10T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "🇫🇷", a_zh: "瑞士", a_en: "Switzerland", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e5", utc: "2026-09-10T16:00:00Z", h_zh: "以色列", h_en: "Israel", h_f: "🇮🇱", a_zh: "烏克蘭", a_en: "Ukraine", a_f: "🇺🇦", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e6", utc: "2026-09-10T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "🇫🇮", a_zh: "丹麥", a_en: "Denmark", a_f: "🇩🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e7", utc: "2026-09-10T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "🇹🇷", a_zh: "德國", a_en: "Germany", a_f: "🇩🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e8", utc: "2026-09-10T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "🇮🇹", a_zh: "瑞典", a_en: "Sweden", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e9", utc: "2026-09-11T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "🇺🇦", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e10", utc: "2026-09-11T14:00:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "🇨🇿", a_zh: "希臘", a_en: "Greece", a_f: "🇬🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e11", utc: "2026-09-11T14:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "🇳🇱", a_zh: "比利時", a_en: "Belgium", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e12", utc: "2026-09-11T14:00:00Z", h_zh: "德國", h_en: "Germany", h_f: "🇩🇪", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e13", utc: "2026-09-11T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "🇵🇱", a_zh: "以色列", a_en: "Israel", a_f: "🇮🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e14", utc: "2026-09-11T17:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_f: "🇸🇪", a_zh: "捷克", a_en: "Czechia", a_f: "🇨🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e15", utc: "2026-09-11T17:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_f: "🇩🇰", a_zh: "荷蘭", a_en: "Netherlands", h_f: "🇳🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e16", utc: "2026-09-11T19:00:00Z", h_zh: "法國", h_en: "France", h_f: "🇫🇷", a_zh: "土耳其", a_en: "Turkey", a_f: "🇹🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e17", utc: "2026-09-12T13:00:00Z", h_zh: "葡萄牙", h_en: "Portugal", h_f: "🇵🇹", a_zh: "保加利亞", a_en: "Bulgaria", a_f: "🇧🇬", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e18", utc: "2026-09-12T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_f: "🇸🇰", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e19", utc: "2026-09-12T14:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_f: "🇪🇪", a_zh: "丹麥", a_en: "Denmark", a_f: "🇩🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e20", utc: "2026-09-12T16:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_f: "🇲🇰", a_zh: "波蘭", a_en: "Poland", a_f: "🇵🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e21", utc: "2026-09-12T17:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_f: "🇱🇻", a_zh: "法國", a_en: "France", a_f: "🇫🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e22", utc: "2026-09-13T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "🇺🇦", a_zh: "葡萄牙", a_en: "Portugal", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e23", utc: "2026-09-13T14:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_f: "🇸🇮", a_zh: "瑞典", a_en: "Sweden", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e24", utc: "2026-09-13T14:00:00Z", h_zh: "比利時", h_en: "Belgium", h_f: "🇧🇪", a_zh: "芬蘭", a_en: "Finland", a_f: "🇫🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e25", utc: "2026-09-13T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "🇧🇬", a_zh: "烏克蘭", a_en: "Ukraine", a_f: "🇺🇦", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e26", utc: "2026-09-13T17:00:00Z", h_zh: "德國", h_en: "Germany", h_f: "🇩🇪", a_zh: "瑞士", a_en: "Switzerland", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e27", utc: "2026-09-13T19:05:00Z", h_zh: "希臘", h_en: "Greece", h_f: "🇬🇷", a_zh: "義大利", a_en: "Italy", a_f: "🇮🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e28", utc: "2026-09-14T13:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_f: "🇲🇰", a_zh: "葡萄牙", a_en: "Portugal", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e29", utc: "2026-09-14T14:00:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "🇨🇿", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e30", utc: "2026-09-14T14:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "🇫🇮", a_zh: "塞爾維亞", a_en: "Serbia", a_f: "🇷🇸", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e31", utc: "2026-09-14T14:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_f: "🇷🇴", a_zh: "土耳其", a_en: "Turkey", a_f: "🇹🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e32", utc: "2026-09-14T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_f: "🇧🇬", a_zh: "以色列", a_en: "Israel", a_f: "🇮🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e33", utc: "2026-09-14T17:00:00Z", h_zh: "比利時", h_en: "Belgium", h_f: "🇧🇪", a_zh: "荷蘭", a_en: "Netherlands", h_f: "🇳🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e34", utc: "2026-09-14T17:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_f: "🇱🇻", a_zh: "瑞士", a_en: "Switzerland", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e35", utc: "2026-09-14T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "🇮🇹", a_zh: "斯洛伐克", a_en: "Slovakia", a_f: "🇸🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e36", utc: "2026-09-15T14:00:00Z", h_zh: "希臘", h_en: "Greece", h_f: "🇬🇷", a_zh: "瑞典", a_en: "Sweden", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e37", utc: "2026-09-15T14:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_f: "🇪🇪", a_zh: "比利時", a_en: "Belgium", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e38", utc: "2026-09-15T16:00:00Z", h_zh: "以色列", h_en: "Israel", h_f: "🇮🇱", a_zh: "北馬其頓", a_en: "N. Macedonia", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e39", utc: "2026-09-15T17:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "🇳🇱", a_zh: "芬蘭", a_en: "Finland", a_f: "🇫🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e40", utc: "2026-09-16T14:00:00Z", h_zh: "希臘", h_en: "Greece", h_f: "🇬🇷", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e41", utc: "2026-09-16T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_f: "🇷🇸", a_zh: "荷蘭", a_en: "Netherlands", h_f: "🇳🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e42", utc: "2026-09-16T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "🇫🇷", a_zh: "德國", a_en: "Germany", a_f: "🇩🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e43", utc: "2026-09-16T16:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_f: "🇺🇦", a_zh: "波蘭", a_en: "Poland", a_f: "🇵🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e44", utc: "2026-09-16T17:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_f: "🇩🇰", a_zh: "塞爾維亞", a_en: "Serbia", a_f: "🇷🇸", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e45", utc: "2026-09-16T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "🇹🇷", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e46", utc: "2026-09-16T19:05:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_f: "🇸🇮", a_zh: "義大利", a_en: "Italy", a_f: "🇮🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e47", utc: "2026-09-17T14:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_f: "🇸🇪", a_zh: "斯洛伐克", a_en: "Slovakia", a_f: "🇸🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e48", utc: "2026-09-17T14:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_f: "🇳🇱", a_zh: "愛沙尼亞", a_en: "Estonia", a_f: "🇪🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e49", utc: "2026-09-17T14:00:00Z", h_zh: "法國", h_en: "France", h_f: "🇫🇷", a_zh: "羅馬尼亞", a_en: "Romania", a_f: "🇷🇴", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e50", utc: "2026-09-17T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_f: "🇵🇱", a_zh: "保加利亞", a_en: "Bulgaria", a_f: "🇧🇬", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e51", utc: "2026-09-17T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_f: "🇫🇮", a_zh: "愛沙尼亞", a_en: "Estonia", a_f: "🇪🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e52", utc: "2026-09-17T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_f: "🇹🇷", a_zh: "拉脫維亞", a_en: "Latvia", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e53", utc: "2026-09-17T19:05:00Z", h_zh: "捷克", h_en: "Czechia", h_f: "🇨🇿", a_zh: "義大利", a_en: "Italy", a_f: "🇮🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e54", utc: "2026-09-18T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_f: "🇸🇰", a_zh: "希臘", a_en: "Greece", a_f: "🇬🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e55", utc: "2026-09-18T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_f: "🇷🇸", a_zh: "比利時", a_en: "Belgium", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "e56", utc: "2026-09-18T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_f: "🇮🇹", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { local_d: "09/19", local_w: "六", local_w_en: "Sat", zh_name: "1/8 決賽", en_name: "Round of 16 (1/8F)", type: "stage" },
+                { local_d: "09/20", local_w: "日", local_w_en: "Sun", zh_name: "1/8 決賽", en_name: "Round of 16 (1/8F)", type: "stage" },
+                { local_d: "09/21", local_w: "一", local_w_en: "Mon", zh_name: "1/8 決賽", en_name: "Round of 16 (1/8F)", type: "stage" },
+                { local_d: "09/22", local_w: "二", local_w_en: "Tue", zh_name: "Quarter-finals (八強決賽)", en_name: "Quarter-finals", type: "stage" },
+                { local_d: "09/23", local_w: "三", local_w_en: "Wed", zh_name: "Quarter-finals (八強決賽)", en_name: "Quarter-finals", type: "stage" },
+                { local_d: "09/25", local_w: "五", local_w_en: "Fri", zh_name: "Semi-finals (四強準決賽)", en_name: "Semi-finals", type: "stage" },
                 { local_d: "09/26", local_w: "六", local_w_en: "Sat", zh_name: "季軍賽 (Bronze Medal Match)", en_name: "Bronze Medal Match", type: "stage" },
                 { local_d: "09/26", local_w: "六", local_w_en: "Sat", zh_name: "冠軍總決賽 (Gold Medal Match)", en_name: "Gold Medal Match", type: "stage" }
             ],
             asia: [
-                { utc: "2026-09-04T03:30:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "ir", a_zh: "紐西蘭", a_en: "New Zealand", a_f: "nz", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-04T07:00:00Z", h_zh: "韓國", h_en: "South Korea", h_f: "kr", a_zh: "台灣", a_en: "Taiwan", a_f: "tw", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-04T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "jp", a_zh: "阿曼", a_en: "Oman", a_f: "om", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-05T01:00:00Z", h_zh: "澳洲", h_en: "Australia", h_f: "au", a_zh: "巴林", a_en: "Bahrain", a_f: "bh", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-05T04:30:00Z", h_zh: "中國", h_en: "China", h_f: "cn", a_zh: "印度", a_en: "India", a_f: "in", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-05T08:00:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "qa", a_zh: "泰國", a_en: "Thailand", a_f: "th", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-06T01:00:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "ir", a_zh: "印度", a_en: "India", a_f: "in", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-06T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "qa", a_zh: "台灣", a_en: "Taiwan", a_f: "tw", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-06T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "jp", a_zh: "巴林", a_en: "Bahrain", a_f: "bh", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-07T01:00:00Z", h_zh: "阿曼", h_en: "Oman", h_f: "om", a_zh: "澳洲", a_en: "Australia", a_f: "au", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-07T04:30:00Z", h_zh: "紐西蘭", h_en: "New Zealand", h_f: "nz", a_zh: "中國", a_en: "China", a_f: "cn", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-07T08:00:00Z", h_zh: "泰國", h_en: "Thailand", h_f: "th", a_zh: "韓國", a_en: "South Korea", a_f: "kr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" }
-                ,{ utc: "2026-09-08T01:00:00Z", h_zh: "印度", h_en: "India", h_f: "in", a_zh: "紐西蘭", a_en: "New Zealand", a_f: "nz", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-08T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "qa", a_zh: "韓國", a_en: "South Korea", a_f: "kr", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-08T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "jp", a_zh: "澳洲", a_en: "Australia", a_f: "au", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-09T01:00:00Z", h_zh: "巴林", h_en: "Bahrain", h_f: "bh", a_zh: "阿曼", a_en: "Oman", a_f: "om", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-09T04:30:00Z", h_zh: "台灣", h_en: "Taiwan", h_f: "tw", a_zh: "泰國", a_en: "Thailand", a_f: "th", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { utc: "2026-09-09T08:00:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "ir", a_zh: "中國", a_en: "China", a_f: "cn", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
-                { local_d: "09/10", local_w: "四", local_w_en: "Thu", zh_name: "半準決賽 (八強賽) - 第一場", en_name: "Quarter-finals - Match 1", type: "stage" },
-                { local_d: "09/10", local_w: "四", local_w_en: "Thu", zh_name: "半準決賽 (八強賽) - 第二場", en_name: "Quarter-finals - Match 2", type: "stage" },
-                { local_d: "09/11", local_w: "五", local_w_en: "Fri", zh_name: "半準決賽 (八強賽) - 第三場", en_name: "Quarter-finals - Match 3", type: "stage" },
-                { local_d: "09/11", local_w: "五", local_w_en: "Fri", zh_name: "半準決賽 (八強賽) - 第四場", en_name: "Quarter-finals - Match 4", type: "stage" },
-                { local_d: "09/12", local_w: "六", local_w_en: "Sat", zh_name: "準決賽 (四強賽) - 第一場", en_name: "Semi-finals - Match 1", type: "stage" },
-                { local_d: "09/12", local_w: "六", local_w_en: "Sat", zh_name: "準決賽 (四強賽) - 第二場", en_name: "Semi-finals - Match 2", type: "stage" },
+                { id: "a1", utc: "2026-09-04T03:30:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "🇮🇷", a_zh: "紐西蘭", a_en: "New Zealand", a_f: "🇳🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a2", utc: "2026-09-04T07:00:00Z", h_zh: "韓國", h_en: "South Korea", h_f: "🇰🇷", a_zh: "台灣", a_en: "Taiwan", a_f: "🇹🇼", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a3", utc: "2026-09-04T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "🇯🇵", a_zh: "阿曼", a_en: "Oman", a_f: "🇴🇲", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a4", utc: "2026-09-05T01:00:00Z", h_zh: "澳洲", h_en: "Australia", h_f: "🇦🇺", a_zh: "巴林", a_en: "Bahrain", a_f: "🇧🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a5", utc: "2026-09-05T04:30:00Z", h_zh: "中國", h_en: "China", h_f: "🇨🇳", a_zh: "印度", a_en: "India", a_f: "🇮🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a6", utc: "2026-09-05T08:00:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "🇶🇦", a_zh: "泰國", a_en: "Thailand", a_f: "🇹🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a7", utc: "2026-09-06T01:00:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "🇮🇷", a_zh: "印度", a_en: "India", a_f: "🇮🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a8", utc: "2026-09-06T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "🇶🇦", a_zh: "台灣", a_en: "Taiwan", a_f: "🇹🇼", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a9", utc: "2026-09-06T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "🇯🇵", a_zh: "巴林", a_en: "Bahrain", a_f: "🇧🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a10", utc: "2026-09-07T01:00:00Z", h_zh: "阿曼", h_en: "Oman", h_f: "🇴🇲", a_zh: "澳洲", a_en: "Australia", a_f: "🇦🇺", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a11", utc: "2026-09-07T04:30:00Z", h_zh: "紐西蘭", h_en: "New Zealand", h_f: "🇳🇿", a_zh: "中國", a_en: "China", a_f: "🇨🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a12", utc: "2026-09-07T08:00:00Z", h_zh: "泰國", h_en: "Thailand", h_f: "🇹🇭", a_zh: "韓國", a_en: "South Korea", a_f: "🇰🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a13", utc: "2026-09-08T01:00:00Z", h_zh: "印度", h_en: "India", h_f: "🇮🇳", a_zh: "紐西蘭", a_en: "New Zealand", a_f: "🇳🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a14", utc: "2026-09-08T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_f: "🇶🇦", a_zh: "韓國", a_en: "South Korea", a_f: "🇰🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a15", utc: "2026-09-08T10:30:00Z", h_zh: "日本", h_en: "Japan", h_f: "🇯🇵", a_zh: "澳洲", a_en: "Australia", a_f: "🇦🇺", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a16", utc: "2026-09-09T01:00:00Z", h_zh: "巴林", h_en: "Bahrain", h_f: "🇧🇭", a_zh: "阿曼", a_en: "Oman", a_f: "🇴🇲", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a17", utc: "2026-09-09T04:30:00Z", h_zh: "台灣", h_en: "Taiwan", h_f: "🇹🇼", a_zh: "泰國", a_en: "Thailand", a_f: "🇹🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { id: "a18", utc: "2026-09-09T08:00:00Z", h_zh: "伊朗", h_en: "Iran", h_f: "🇮🇷", a_zh: "中國", a_en: "China", a_f: "🇨🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase" },
+                { local_d: "09/10", local_w: "四", local_w_en: "Thu", zh_name: "Quarter-finals (八強賽) - Match 1", en_name: "Quarter-finals - Match 1", type: "stage" },
+                { local_d: "09/10", local_w: "四", local_w_en: "Thu", zh_name: "Quarter-finals (八強賽) - Match 2", en_name: "Quarter-finals - Match 2", type: "stage" },
+                { local_d: "09/11", local_w: "五", local_w_en: "Fri", zh_name: "Quarter-finals (八強賽) - Match 3", en_name: "Quarter-finals - Match 3", type: "stage" },
+                { local_d: "09/11", local_w: "五", local_w_en: "Fri", zh_name: "Quarter-finals (八強賽) - Match 4", en_name: "Quarter-finals - Match 4", type: "stage" },
+                { local_d: "09/12", local_w: "六", local_w_en: "Sat", zh_name: "Semi-finals (四強準決賽) - Match 1", en_name: "Semi-finals - Match 1", type: "stage" },
+                { local_d: "09/12", local_w: "六", local_w_en: "Sat", zh_name: "Semi-finals (四強準決賽) - Match 2", en_name: "Semi-finals - Match 2", type: "stage" },
                 { local_d: "09/13", local_w: "日", local_w_en: "Sun", zh_name: "季軍決賽 (Bronze Medal Match)", en_name: "Third Place Playoff", type: "stage" },
                 { local_d: "09/13", local_w: "日", local_w_en: "Sun", zh_name: "冠軍總決賽 (Gold Medal Match)", en_name: "The Final Match", type: "stage" }
             ]
         };
         const uiText = {
-            zh: { titleEuro: "2026歐錦賽", titleAsia: "2026亞錦賽", thDate: "日期", thTime: "時間", thMatch: "對戰組合", allDate: "-- 全日期 --", currentTz: "時區偵測：", tbdTime: "未定", localDateNote: "(當地日期)", btnFiltered: "📁 加入目前篩選賽程", btnAll: "📥 加入此賽事全部賽程" },
-            en: { titleEuro: "CEV EuroVolley 2026", titleAsia: "AVC Men's Continental 2026", thDate: "Date", thTime: "Time", thMatch: "Matchup", allDate: "-- All Dates --", currentTz: "Timezone:", tbdTime: "TBD", localDateNote: "(Local Date)", btnFiltered: "📁 Add Filtered Schedule", btnAll: "📥 Add Entire Tournament" }
+            zh: { titleEuro: "2026歐錦賽", titleAsia: "2026亞錦賽", thDate: "日期", thTime: "時間", thMatch: "對戰組合", allDate: "-- 全日期 --", currentTz: "時區偵測：", tbdTime: "未定", localDateNote: "(當地日期)", cartText1: "🛒 已選取 ", cartText2: " 場比賽", btnCartGo: "加入行事曆", btnCalSmart: "📅 一鍵加入此賽事全部賽程", filterDate: "📅 日期篩選 / Date:", filterCountry: "🔍 國家篩選 (可複選) / Team:" },
+            en: { titleEuro: "CEV EuroVolley 2026", titleAsia: "AVC Men's Continental 2026", thDate: "Date", thTime: "Time", thMatch: "Matchup", allDate: "-- All Dates --", currentTz: "Timezone:", tbdTime: "TBD", localDateNote: "(Local Date)", cartText1: "🛒 Selected ", cartText2: " matches", btnCartGo: "Add to Calendar", btnCalSmart: "📅 Add Entire Tournament", filterDate: "📅 Date Filter:", filterCountry: "🔍 Team Filter (Multiple Choice):" }
         };
 
         let currentMode = 'euro'; let currentLang = 'zh'; let activeTzOffset = 8;
-
-        function getFlagUrl(code) {
-            if (code === 'un') return 'data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 3 2" fill="%23ccc"><rect width="3" height="2"/></svg>';
-            return `https://flagcdn.com{code}.png`;
-        }
+        const selectedMatches = new Set();
 
         function initApp() { detectBrowserTimezone(); switchTournament('euro'); }
 
+        function toggleSidebar() {
+            const sb = document.getElementById("sidebar"); const overlay = document.getElementById("sidebarOverlay");
+            if(sb.classList.contains("open")) { sb.classList.remove("open"); overlay.classList.remove("show"); }
+            else { sb.classList.add("open"); overlay.classList.add("show"); }
+        }
+
         function detectBrowserTimezone() {
-            const offsetMinutes = new Date().getTimezoneOffset();
-            activeTzOffset = -offsetMinutes / 60;
+            const offsetMinutes = new Date().getTimezoneOffset(); activeTzOffset = -offsetMinutes / 60;
             const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
             document.getElementById("tzStatusText").innerText = `🌐 ${uiText[currentLang].currentTz} ${tzName} (UTC${activeTzOffset >= 0 ? '+' : ''}${activeTzOffset})`;
         }
 
         function switchTournament(mode) {
-            currentMode = mode;
+            currentMode = mode; 
             document.body.className = mode === 'euro' ? 'theme-euro' : 'theme-asia';
-            document.getElementById("btnEuro").className = "toggle-btn " + (mode === 'euro' ? 'active euro' : '');
-            document.getElementById("btnAsia").className = "toggle-btn " + (mode === 'asia' ? 'active asia' : '');
+            clearCart();
+            document.getElementById("btnEuro").className = "sb-toggle-btn " + (mode === 'euro' ? 'active euro' : '');
+            document.getElementById("btnAsia").className = "sb-toggle-btn " + (mode === 'asia' ? 'active asia' : '');
             updateLabels(); generateCountryChips(); generateDateOptions(); renderTable();
         }
 
         function toggleLanguage() {
-            currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            detectBrowserTimezone(); updateLabels(); generateDateOptions(); generateCountryChips(); renderTable();
+            currentLang = currentLang === 'zh' ? 'en' : 'zh'; detectBrowserTimezone(); updateLabels(); generateDateOptions(); generateCountryChips(); renderTable(); updateCartUI();
         }
 
         function updateLabels() {
             const lang = uiText[currentLang];
             document.getElementById("textTitleMain").innerText = currentMode === 'euro' ? lang.titleEuro : lang.titleAsia;
             document.getElementById("textTitleSub").innerText = currentMode === 'euro' ? "CEV EuroVolley 2026" : "AVC Volleyball Championship 2026";
-            document.getElementById("thDate").innerText = lang.thDate; document.getElementById("thTime").innerText = lang.thTime; document.getElementById("thMatch").innerText = lang.thMatch;
-            document.getElementById("btnCalFiltered").innerText = lang.btnFiltered; document.getElementById("btnCalAll").innerText = lang.btnAll;
+            document.getElementById("thDate").innerText = lang.thDate; document.getElementById("thTime").innerText = lang.thTime; 
+            document.getElementById("thMatch").innerText = lang.thMatch; document.getElementById("btnCartGo").innerText = lang.btnCartGo;
+            document.getElementById("btnCalSmart").innerText = lang.btnCalSmart;
+            
+            // 更新主頁面篩選器標題
+            document.getElementById("mainLblDate").innerText = lang.filterDate;
+            document.getElementById("mainLblCountry").innerText = lang.filterCountry;
         }
 
         function generateDateOptions() {
@@ -248,38 +325,56 @@
             Array.from(uniqueDates).sort().forEach(date => { select.innerHTML += `<option value="${date}">${date}</option>`; });
             select.value = cachedVal;
         }
+
         function generateCountryChips() {
-            const container = document.getElementById("countryContainer"); container.innerHTML = "";
-            const countries = new Set();
-            rawData[currentMode].forEach(m => { if(m.type === 'normal') { countries.add(JSON.stringify({zh: m.h_zh, en: m.h_en})); countries.add(JSON.stringify({zh: m.a_zh, en: m.a_en})); } });
-            Array.from(countries).sort().forEach(cStr => {
-                const c = JSON.parse(cStr); const chip = document.createElement("div"); chip.className = "country-chip"; chip.innerText = currentLang === 'zh' ? c.zh : c.en;
+            const container = document.getElementById("countryContainer"); container.innerHTML = ""; 
+            const countries = new Map();
+            
+            rawData[currentMode].forEach(m => { 
+                if(m.type === 'normal') { 
+                    countries.set(m.h_zh, m.h_en);
+                    countries.set(m.a_zh, m.a_en);
+                } 
+            });
+
+            Array.from(countries.entries()).sort((a,b) => a[0].localeCompare(b[0], 'zh-Hant')).forEach(([zhName, enName]) => {
+                const chip = document.createElement("div"); 
+                chip.className = "country-chip"; 
+                chip.innerText = currentLang === 'zh' ? zhName : enName;
+                // 修正 BUG：改存固定且不變的 zhName 作為 data-id 基準
+                chip.setAttribute('data-id', zhName);
+                
                 chip.onclick = () => {
-                    if (chip.classList.contains('selected')) { chip.classList.remove('selected'); } 
-                    else { chip.classList.add('selected'); }
+                    chip.classList.toggle('selected');
                     renderTable();
                 };
                 container.appendChild(chip);
             });
         }
 
-        function getVisibleMatches() {
-            const selectedDate = document.getElementById("dateFilter").value;
-            const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.innerText);
-            return rawData[currentMode].filter(match => {
-                if (match.type !== 'normal') return false;
-                const matchDate = new Date(match.utc); const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
-                const dateKey = `${String(localDate.getUTCMonth() + 1).padStart(2, '0')}/${String(localDate.getUTCDate()).padStart(2, '0')}`;
-                if (selectedDate && dateKey !== selectedDate) return false;
-                if (activeChips.length > 0 && !activeChips.includes(match.h_zh) && !activeChips.includes(match.a_zh)) return false;
-                return true;
-            });
+        function toggleRowSelection(id) {
+            const row = document.getElementById(`row-${id}`);
+            if (selectedMatches.has(id)) { selectedMatches.delete(id); if(row) row.classList.remove("selected-row"); } 
+            else { selectedMatches.add(id); if(row) row.classList.add("selected-row"); }
+            updateCartUI();
         }
 
+        function updateCartUI() {
+            const drawer = document.getElementById("cartDrawer"); const text = document.getElementById("cartInfoText");
+            if (selectedMatches.size > 0) {
+                text.innerText = `${uiText[currentLang].cartText1}${selectedMatches.size}${uiText[currentLang].cartText2}`;
+                drawer.classList.add("active");
+            } else { drawer.classList.remove("active"); }
+        }
+
+        function clearCart() { selectedMatches.clear(); updateCartUI(); Array.from(document.querySelectorAll("tr.selected-row")).forEach(r => r.classList.remove("selected-row")); }
+        
         function renderTable() {
             const tbody = document.getElementById("tableBody"); tbody.innerHTML = "";
             const selectedDate = document.getElementById("dateFilter").value;
-            const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.innerText);
+            
+            // 修正 BUG：讀取 data-id 來作比對
+            const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.getAttribute('data-id'));
 
             rawData[currentMode].forEach(match => {
                 if (match.type === 'normal') {
@@ -288,68 +383,75 @@
                     const hours = String(localDate.getUTCHours()).padStart(2, '0'); const minutes = String(localDate.getUTCMinutes()).padStart(2, '0');
                     const weekDaysZh = ["日", "一", "二", "三", "四", "五", "六"]; const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
                     const dateDisplay = `${month}/${dateNum} (${currentLang === 'zh' ? weekDaysZh[localDate.getUTCDay()] : weekDaysEn[localDate.getUTCDay()]})`;
-                    const dateKey = `${month}/${dateNum}`; const hName = currentLang === 'zh' ? match.h_zh : match.h_en; const aName = currentLang === 'zh' ? match.a_zh : match.a_en;
+                    const dateKey = `${month}/${dateNum}`; 
+                    const hName = currentLang === 'zh' ? match.h_zh : match.h_en; 
+                    const aName = currentLang === 'zh' ? match.a_zh : match.a_en;
 
                     if (selectedDate && dateKey !== selectedDate) return;
+                    
+                    // 修正 BUG：統一比對 match.h_zh / match.a_zh 是否在被選取的清單中
                     if (activeChips.length > 0 && !activeChips.includes(match.h_zh) && !activeChips.includes(match.a_zh)) return;
 
-                    const calTitle = `${currentMode==='euro'?'【歐錦賽】':'【亞錦賽】'}${currentLang==='zh'?match.stage_zh:match.stage_en}-${hName} VS ${aName}`;
-                    const tr = document.createElement("tr");
+                    const isSelected = selectedMatches.has(match.id);
+                    const tr = document.createElement("tr"); tr.id = `row-${match.id}`;
+                    if (isSelected) tr.classList.add("selected-row");
+                    tr.onclick = () => toggleRowSelection(match.id);
                     tr.innerHTML = `
                         <td>${dateDisplay}</td><td style="font-weight:bold;">${hours}:${minutes}</td>
                         <td>
                             <div style="display:flex; justify-content:center; align-items:center; gap:6px;">
-                                <span class="flag-box"><img src="${getFlagUrl(match.h_f)}"><span class="team-name" style="font-size:11px;">${hName}</span></span>
+                                <span class="team-text-box"><span>${match.h_f}</span><span class="team-name" style="font-size:11px;">${hName}</span></span>
                                 <span class="vs-label">VS</span>
-                                <span class="flag-box"><img src="${getFlagUrl(match.a_f)}"><span class="team-name" style="font-size:11px;">${aName}</span></span>
+                                <span class="team-text-box"><span>${match.a_f}</span><span class="team-name" style="font-size:11px;">${aName}</span></span>
                             </div>
-                        </td>
-                        <td><button class="bell-btn" onclick="addSingleToCalendar('${calTitle}', '${match.utc}')">⏰</button></td>`;
+                        </td>`;
                     tbody.appendChild(tr);
                 } else {
                     const dateDisplay = `${match.local_d} (${currentLang === 'zh' ? match.local_w : match.local_w_en})<span class="tz-note">${uiText[currentLang].localDateNote}</span>`;
-                    if (selectedDate && match.local_d !== selectedDate) return;
-                    if (activeChips.length > 0) return;
-
-                    const tr = document.createElement("tr");
+                    if (selectedDate && match.local_d !== selectedDate) return; if (activeChips.length > 0) return;
+                    const tr = document.createElement("tr"); tr.style.cursor = "default";
                     tr.innerHTML = `
                         <td>${dateDisplay}</td><td style="color:#64748b; font-size:0.8rem;">${uiText[currentLang].tbdTime}</td>
-                        <td style="font-weight:bold; color:${currentMode==='euro'?'var(--euro-theme)':'var(--asia-theme)'};">${currentLang === 'zh' ? match.zh_name : match.en_name}</td>
-                        <td style="color:#cbd5e1;">-</td>`;
+                        <td style="font-weight:bold; color:${currentMode==='euro'?'var(--euro-theme)':'var(--asia-theme)'};">${currentLang === 'zh' ? match.zh_name : match.en_name}</td>`;
                     tbody.appendChild(tr);
                 }
             });
         }
 
-        function addSingleToCalendar(title, utcStr) {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-            if (!isIOS) {
-                const s = new Date(utcStr); const e = new Date(s.getTime() + (2*60*60*1000)); const fG = (d) => d.toISOString().replace(/[-:]/g, '').split('.') + 'Z';
-                window.open(`https://google.com{encodeURIComponent(title)}&dates=${fG(s)}/${fG(e)}&details=2026排球大賽即時提醒`, '_blank');
-            } else { downloadIcs([{ title, utc: utcStr }], title); }
+        function handleSmartCalendarBatch() {
+            const matchesToDownload = rawData[currentMode].filter(m => m.type === 'normal');
+            downloadIcs(matchesToDownload.map(m => ({
+                title: `${currentMode==='euro'?'【歐錦賽】':'【亞錦賽】'}${currentLang==='zh'?m.stage_zh:m.stage_en}-${currentLang==='zh'?m.h_zh:m.h_en} VS ${currentLang==='zh'?m.a_zh:m.a_en}`,
+                utc: m.utc
+            })), currentMode + "_all_schedule");
         }
 
-        function addFilteredToCalendar() { 
-            const prefix = currentMode === 'euro' ? '【歐錦賽】' : '【亞錦賽】'; const stage = currentLang === 'zh' ? '預賽' : 'Pool Phase';
-            downloadIcs(getVisibleMatches().map(m => ({ title: `${prefix}${stage}-${currentLang==='zh'?m.h_zh:m.h_en} VS ${currentLang==='zh'?m.a_zh:m.a_en}`, utc: m.utc })), "filtered_schedule"); 
-        }
-        
-        function addAllToCalendar() { 
-            const prefix = currentMode === 'euro' ? '【歐錦賽】' : '【亞錦賽】'; const stage = currentLang === 'zh' ? '預賽' : 'Pool Phase';
-            downloadIcs(rawData[currentMode].filter(m=>m.type==='normal').map(m => ({ title: `${prefix}${stage}-${currentLang==='zh'?m.h_zh:m.h_en} VS ${currentLang==='zh'?m.a_zh:m.a_en}`, utc: m.utc })), currentMode + "_all_schedule"); 
+        function handleCartCalendarExport() {
+            const allMatches = [...rawData.euro, ...rawData.asia];
+            const matchesToDownload = allMatches.filter(m => selectedMatches.has(m.id));
+            downloadIcs(matchesToDownload.map(m => ({
+                title: `${m.id.startsWith('e')?'【歐錦賽】':'【亞錦賽】'}${currentLang==='zh'?m.stage_zh:m.stage_en}-${currentLang==='zh'?m.h_zh:m.h_en} VS ${currentLang==='zh'?m.a_zh:m.a_en}`,
+                utc: m.utc
+            })), "my_selected_schedule");
+            clearCart();
         }
 
         function downloadIcs(matches, filename) {
-            if (matches.length === 0) { alert(currentLang==='zh'?"當前條件下沒有可加入的預賽賽程！":"No matches found."); return; }
+            if (matches.length === 0) return;
             let icsLines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Volleyball//EN"];
             matches.forEach(m => {
-                const s = new Date(m.utc); const e = new Date(s.getTime() + (2 * 60 * 60 * 1000)); const fI = (d) => d.toISOString().replace(/[-:]/g, '').split('.') + 'Z';
-                icsLines.push("BEGIN:VEVENT", `DTSTART:${fI(s)}`, `DTEND:${fI(e)}`, `SUMMARY:${m.title}`, "DESCRIPTION:2026排球大賽，記得準時觀戰！", "BEGIN:VALARM", "TRIGGER:-PT15M", "ACTION:DISPLAY", "DESCRIPTION:Reminder", "END:VALARM", "END:VEVENT");
+                const s = new Date(m.utc); const e = new Date(s.getTime() + (2 * 60 * 60 * 1000)); const fI = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                icsLines.push("BEGIN:VEVENT", `DTSTART:${fI(s)}`, `DTEND:${fI(e)}`, `SUMMARY:${m.title}`, "DESCRIPTION:2026排球賽事即時提醒，記得準時觀戰！", "BEGIN:VALARM", "TRIGGER:-PT15M", "ACTION:DISPLAY", "DESCRIPTION:Reminder", "END:VALARM", "END:VEVENT");
             });
             icsLines.push("END:VCALENDAR");
-            const blob = new Blob([icsLines.join("\n")], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `${filename}.ics`;
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                window.open("data:text/calendar;charset=utf8," + encodeURIComponent(icsLines.join("\n")), '_self');
+            } else {
+                const blob = new Blob([icsLines.join("\n")], { type: 'text/calendar;charset=utf-8;' });
+                const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `${filename}.ics`;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            }
         }
         window.onload = initApp;
     </script>
