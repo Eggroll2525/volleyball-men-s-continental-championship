@@ -50,7 +50,9 @@
         .nav-title-box { text-align: center; flex-grow: 1; }
         .nav-title { font-size: 1.05rem; font-weight: bold; color: #0f172a; }
         .nav-subtitle { font-size: 0.7rem; color: #64748b; font-weight: 500; }
-        .menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #334155; padding: 4px; display: flex; align-items: center; }
+        .menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #334155; padding: 4px; display: flex; align-items: center; text-decoration: none; }
+        .stream-btn { transition: transform 0.2s ease; }
+        .stream-btn:active { transform: scale(1.2); }
         
         /* 側邊欄樣式 */
         .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; box-shadow: 4px 0 15px rgba(0,0,0,0.1); z-index: 10000; transition: left 0.3s ease; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
@@ -89,7 +91,7 @@
         body.theme-asia .country-chip.selected { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
 
         .report-link-box { margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 12px; text-align: center; }
-        .report-text-link { font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+        .report-text-link { font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
         
         /* 表格響應式修復 */
         .table-wrapper { 
@@ -191,7 +193,7 @@
             <div class="nav-title" id="textTitleMain">2026歐錦賽</div>
             <div class="nav-subtitle" id="textTitleSub">CEV EuroVolley 2026</div>
         </div>
-        <div style="width: 24px;"></div> 
+        <a id="streamBtn" class="menu-btn stream-btn" href="https://www.eurovolley.tv/pages/l9h2Cu-QQ" target="_blank" rel="noopener noreferrer" title="前往觀看轉播">📺</a>
     </div>
     
     <div class="tz-status-bar" id="tzStatusText">正在偵測時區...</div>
@@ -241,7 +243,7 @@
             <button class="sb-toggle-btn" style="background:#f1f5f9; border-color:#cbd5e1; color:#1e293b; padding:10px; font-size:0.85rem;" onclick="openGuideModal()"><span id="btnOpenGuide">查看使用說明</span></button>
         </div>
         <div class="report-link-box">
-            <a href="https://www.instagram.com/direct/t/17842018811592418" target="_blank" class="report-text-link" id="reportBugLink">⚠️ 回報問題 / Report Bug</a>
+            <a href="https://www.instagram.com/eggroll.25" target="_blank" class="report-text-link" id="reportBugLink" onclick="openInstagram(event)">⚠️ 回報問題 / Report Bug</a>
         </div>
     </div>
 
@@ -378,6 +380,11 @@
             ]
         };
         
+        const streamUrls = {
+            euro: "https://www.eurovolley.tv/pages/l9h2Cu-QQ",
+            asia: "https://tv.volleyballworld.com/"
+        };
+
         const uiText = {
             zh: { 
                 titleEuro: "2026歐錦賽", titleAsia: "2026亞錦賽", 
@@ -392,7 +399,9 @@
                 guideTitle: "📖 使用說明",
                 btnGuideClose: "我知道了",
                 localDateLabel: "(當地日期)",
-                tbdText: "未定"
+                tbdText: "未定",
+                streamTooltip: "前往觀看轉播",
+                calDetail: "2026排球賽事即時提醒，記得準時觀戰！"
             },
             en: { 
                 titleEuro: "CEV EuroVolley 2026", titleAsia: "AVC Men's Continental 2026", 
@@ -407,7 +416,9 @@
                 guideTitle: "📖 User Guide",
                 btnGuideClose: "Got it",
                 localDateLabel: "(Local Date)",
-                tbdText: "TBD"
+                tbdText: "TBD",
+                streamTooltip: "Watch Live Stream",
+                calDetail: "2026 Volleyball Match Reminder. Don't miss it!"
             }
         };
 
@@ -422,6 +433,31 @@
                 openGuideModal();
                 localStorage.setItem('hasSeenGuide', 'true');
             }
+        }
+
+        function openInstagram(e) {
+            e.preventDefault();
+            const webUrl = "https://www.instagram.com/eggroll.25";
+            const appUrl = "instagram://user?username=eggroll.25";
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+            if (!isMobile) {
+                window.open(webUrl, '_blank');
+                return;
+            }
+
+            let hasLeft = false;
+            const onBlur = () => { hasLeft = true; };
+            window.addEventListener('blur', onBlur);
+
+            const timer = setTimeout(() => {
+                window.removeEventListener('blur', onBlur);
+                if (!hasLeft) {
+                    window.location.href = webUrl;
+                }
+            }, 1500);
+
+            window.location.href = appUrl;
         }
 
         function toggleSidebar() {
@@ -460,6 +496,10 @@
                         <div>點擊左上角選單 <span class="b-text">☰</span>，可在側邊欄自由切換「歐錦賽 / 亞錦賽」與「中文 / English」。</div>
                     </div>
                     <div class="guide-item">
+                        <div class="guide-title">📺 線上轉播連結</div>
+                        <div>點擊標題右側的 <span class="b-text">📺</span> 符號即可前往當前賽事的官方轉播網站。</div>
+                    </div>
+                    <div class="guide-item">
                         <div class="guide-title">📅 加入行事曆功能</div>
                         <div>
                             1. <span class="b-text">加入畫面所有賽程</span>：點擊底部「加入畫面中所有賽程」按鈕即可。<br>
@@ -480,6 +520,10 @@
                     <div class="guide-item">
                         <div class="guide-title">🏆 Tournaments & Languages</div>
                         <div>Click top-left menu <span class="b-text">☰</span> in sidebar to switch between tournaments and languages.</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📺 Live Stream</div>
+                        <div>Click the <span class="b-text">📺</span> icon on the right side of the title to visit the official live broadcast website.</div>
                     </div>
                     <div class="guide-item">
                         <div class="guide-title">📅 Add to Calendar</div>
@@ -512,6 +556,11 @@
             clearCart();
             document.getElementById("btnEuro").className = "sb-toggle-btn " + (mode === 'euro' ? 'active euro' : '');
             document.getElementById("btnAsia").className = "sb-toggle-btn " + (mode === 'asia' ? 'active asia' : '');
+            
+            const streamBtn = document.getElementById("streamBtn");
+            streamBtn.href = streamUrls[mode];
+            streamBtn.title = uiText[currentLang].streamTooltip;
+
             updateLabels(); generateCountryChips(); generateDateOptions(); renderTable();
         }
 
@@ -534,6 +583,8 @@
 
             document.getElementById("mainLblDate").innerText = lang.filterDate;
             document.getElementById("mainLblCountry").innerText = lang.filterCountry;
+            
+            document.getElementById("streamBtn").title = lang.streamTooltip;
         }
 
         function generateDateOptions() {
@@ -720,14 +771,27 @@
             }
 
             const formattedEvents = validMatches.map(m => {
+                let prefix = "";
+                if (currentLang === 'zh') {
+                    prefix = currentMode === 'euro' ? '【歐錦賽】' : '【亞錦賽】';
+                } else {
+                    prefix = currentMode === 'euro' ? '[EuroVolley]' : '[AVC]';
+                }
+
                 let title = "";
                 if (m.type === 'normal') {
-                    title = `${currentMode==='euro'?'【歐錦賽】':'【亞錦賽】'}${currentLang==='zh'?m.stage_zh:m.stage_en}-${currentLang==='zh'?m.h_zh:m.h_en} VS ${currentLang==='zh'?m.a_zh:m.a_en}`;
+                    const stage = currentLang === 'zh' ? m.stage_zh : m.stage_en;
+                    const home = currentLang === 'zh' ? m.h_zh : m.h_en;
+                    const away = currentLang === 'zh' ? m.a_zh : m.a_en;
+                    title = `${prefix}${stage} - ${home} VS ${away}`;
                 } else {
-                    title = `${currentMode==='euro'?'【歐錦賽】':'【亞錦賽】'}${currentLang==='zh'?m.zh_name:m.en_name}`;
+                    const stageName = currentLang === 'zh' ? m.zh_name : m.en_name;
+                    title = `${prefix}${stageName}`;
                 }
                 return { title, utc: m.utc };
             });
+
+            const detailText = uiText[currentLang].calDetail;
 
             const isAndroid = /Android/i.test(navigator.userAgent);
             if (isAndroid && formattedEvents.length === 1) {
@@ -735,20 +799,32 @@
                 const s = new Date(ev.utc);
                 const e = new Date(s.getTime() + (2 * 60 * 60 * 1000));
                 const formatG = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '');
-                const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${formatG(s)}/${formatG(e)}&details=${encodeURIComponent("2026排球賽程提醒")}`;
+                const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${formatG(s)}/${formatG(e)}&details=${encodeURIComponent(detailText)}`;
                 window.open(gUrl, '_blank');
             } else {
-                downloadIcs(formattedEvents, filename);
+                downloadIcs(formattedEvents, filename, detailText);
             }
         }
 
-        function downloadIcs(matches, filename) {
+        function downloadIcs(matches, filename, detailText) {
             let icsLines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Volleyball Schedule//EN"];
             matches.forEach(m => {
                 const s = new Date(m.utc); 
                 const e = new Date(s.getTime() + (2 * 60 * 60 * 1000)); 
                 const fI = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                icsLines.push("BEGIN:VEVENT", `DTSTART:${fI(s)}`, `DTEND:${fI(e)}`, `SUMMARY:${m.title}`, "DESCRIPTION:2026排球賽事即時提醒，記得準時觀戰！", "BEGIN:VALARM", "TRIGGER:-PT15M", "ACTION:DISPLAY", "DESCRIPTION:Reminder", "END:VALARM", "END:VEVENT");
+                icsLines.push(
+                    "BEGIN:VEVENT",
+                    `DTSTART:${fI(s)}`,
+                    `DTEND:${fI(e)}`,
+                    `SUMMARY:${m.title}`,
+                    `DESCRIPTION:${detailText}`,
+                    "BEGIN:VALARM",
+                    "TRIGGER:-PT15M",
+                    "ACTION:DISPLAY",
+                    "DESCRIPTION:Reminder",
+                    "END:VALARM",
+                    "END:VEVENT"
+                );
             });
             icsLines.push("END:VCALENDAR");
 
