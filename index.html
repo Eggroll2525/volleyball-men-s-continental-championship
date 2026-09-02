@@ -88,13 +88,23 @@
             width: 100%;
         }
         .filter-group { display: flex; flex-direction: column; gap: 4px; }
-        .filter-label { font-size: 0.75rem; font-weight: bold; color: #64748b; }
-        .main-select { width: 100%; padding: 8px; font-size: 0.85rem; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #0f172a; outline: none; }
-        
+        .filter-label { font-size: 0.75rem; font-weight: 700; color: #64748b; }
+        .filter-controls { display: flex; width: 100%; gap: 8px; }
+        .filter-control { flex: 1 1 0; min-width: 0; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; min-height: 38px; overflow: hidden; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+        .filter-control:focus-within { border-color: #94a3b8; box-shadow: 0 0 0 2px rgba(148,163,184,0.12); }
+        .filter-icon { flex: 0 0 auto; padding-left: 9px; font-size: 0.82rem; line-height: 1; pointer-events: none; }
+        .select-wrap { position: relative; flex: 1; min-width: 0; }
+        .select-wrap-full { width: 100%; }
+        .main-select { width: 100%; min-width: 0; height: 36px; padding: 0 8px; font-size: 0.82rem; font-weight: 700; border: none; border-radius: 7px; background: transparent; color: #0f172a; outline: none; appearance: auto; -webkit-appearance: auto; cursor: pointer; }
         .country-selector { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; max-height: 100px; overflow-y: auto; width: 100%; }
-        .country-chip { display: flex; align-items: center; gap: 2px; background: #fff; border: 1px solid #cbd5e1; padding: 3px 6px; border-radius: 12px; font-size: 0.75rem; cursor: pointer; user-select: none; color: #475569; }
+        .country-chip { display: flex; align-items: center; gap: 2px; background: #fff; border: 1px solid #cbd5e1; padding: 3px 6px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; user-select: none; color: #475569; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .country-chip.selected::before { content: "✓"; font-size: 0.68rem; font-weight: 800; }
         body.theme-euro .country-chip.selected { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
         body.theme-asia .country-chip.selected { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
+        .match-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+        .match-pair { display: flex; justify-content: center; align-items: center; gap: 4px; width: 100%; }
+        .match-stage-note { font-size: 0.62rem; line-height: 1.1; color: #94a3b8; font-weight: 600; letter-spacing: 0.01em; }
+        .stage-match-label { font-size: 0.82rem; font-weight: 700; color: #0284c7; }
 
         .report-link-box { margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 12px; text-align: center; }
         .report-text-link { font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
@@ -155,23 +165,26 @@
         }
         .cart-btn-full {
             flex: 1;
-            padding: 10px 4px;
+            padding: 9px 6px;
+            min-height: 38px;
             font-size: 0.82rem;
-            font-weight: bold;
-            border-radius: 6px;
-            border: none;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid transparent;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            gap: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             white-space: nowrap;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
         }
-        body.theme-euro .btn-primary-drawer { background: var(--euro-theme); }
-        body.theme-asia .btn-primary-drawer { background: var(--asia-theme); }
-        .btn-selected-drawer { background: #10b981; }
+        .cart-btn-full:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+        body.theme-euro .btn-primary-drawer { background: var(--euro-theme); border-color: var(--euro-theme); }
+        body.theme-asia .btn-primary-drawer { background: var(--asia-theme); border-color: var(--asia-theme); }
+        .btn-selected-drawer { background: #10b981; border-color: #10b981; }
 
         /* Modal 使用說明蓋版樣式 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 16px; }
@@ -205,12 +218,22 @@
     <div class="tz-status-bar" id="tzStatusText">正在偵測時區...</div>
 
     <div class="main-filter-card">
-        <div class="filter-group">
-            <div class="filter-label" id="mainLblDate">📅 日期篩選 / Date:</div>
-            <select id="dateFilter" class="main-select" onchange="renderTable()"><option value="">-- 全日期 --</option></select>
+        <div class="filter-controls">
+            <div class="filter-control">
+                <span class="filter-icon" aria-hidden="true">📅</span>
+                <div class="select-wrap">
+                    <select id="dateFilter" class="main-select" onchange="renderTable()" aria-label="Date"><option value="">-- 全日期 --</option></select>
+                </div>
+            </div>
+            <div class="filter-control">
+                <span class="filter-icon" aria-hidden="true">🏐</span>
+                <div class="select-wrap select-wrap-full">
+                    <select id="poolFilter" class="main-select" onchange="renderTable()" aria-label="Pool"><option value="">分組</option></select>
+                </div>
+            </div>
         </div>
         <div class="filter-group">
-            <div class="filter-label" id="mainLblCountry">🔍 國家篩選 (可複選) / Team:</div>
+            <div class="filter-label" id="mainLblCountry">🔍 隊伍（可複選）</div>
             <div class="country-selector" id="countryContainer"></div>
         </div>
     </div>
@@ -399,7 +422,7 @@
                 textExportAll: "加入畫面中所有賽程",
                 textExportSelectedPrefix: "加入選取 (",
                 textExportSelectedSuffix: "場)",
-                filterDate: "📅 日期篩選 / Date:", filterCountry: "🔍 國家篩選 (可複選) / Team:", 
+                filterCountry: "🔍 隊伍（可複選）", filterPool: "分組", poolAll: "分組", poolFinals: "決賽輪", 
                 sbLblTour: "🏆 選擇賽事 / Tournament:", sbLblLang: "🌐 語言 / Language:", sbLblGuide: "📖 說明 / Help:",
                 btnOpenGuide: "查看使用說明",
                 guideTitle: "📖 使用說明",
@@ -417,7 +440,7 @@
                 textExportAll: "Add Shown Schedule",
                 textExportSelectedPrefix: "Add Selected (",
                 textExportSelectedSuffix: ")",
-                filterDate: "📅 Date Filter:", filterCountry: "🔍 Team Filter (Multiple Choice):", 
+                filterCountry: "🔍 Teams (select multiple)", filterPool: "POOL", poolAll: "POOL", poolFinals: "Finals", 
                 sbLblTour: "🏆 Tournament:", sbLblLang: "🌐 Language:", sbLblGuide: "📖 Guide:",
                 btnOpenGuide: "View User Guide",
                 guideTitle: "📖 User Guide",
@@ -435,7 +458,7 @@
                 textExportAll: "表示中の全試合を追加",
                 textExportSelectedPrefix: "選択した試合を追加 (",
                 textExportSelectedSuffix: "件)",
-                filterDate: "📅 日付フィルター:", filterCountry: "🔍 チームフィルター (複数選択可):", 
+                filterCountry: "🔍 チーム（複数選択可）", filterPool: "グループ", poolAll: "グループ", poolFinals: "決勝ラウンド", 
                 sbLblTour: "🏆 大会選択:", sbLblLang: "🌐 言語 / Language:", sbLblGuide: "📖 ガイド:",
                 btnOpenGuide: "使い方を見る",
                 guideTitle: "📖 使い方ガイド",
@@ -664,7 +687,7 @@
             streamBtn.href = streamUrls[mode];
             streamBtn.title = uiText[currentLang].streamTooltip;
 
-            updateLabels(); generateCountryChips(); generateDateOptions(); renderTable();
+            updateLabels(); generateCountryChips(); generateDateOptions(); generatePoolOptions(); renderTable();
         }
 
         function toggleLanguage() {
@@ -672,7 +695,7 @@
             else if (currentLang === 'en') currentLang = 'ja';
             else currentLang = 'zh';
             
-            detectBrowserTimezone(); updateLabels(); generateDateOptions(); generateCountryChips(); renderTable(); updateCartUI();
+            detectBrowserTimezone(); updateLabels(); generateDateOptions(); generatePoolOptions(); generateCountryChips(); renderTable(); updateCartUI();
         }
 
         function updateLabels() {
@@ -689,8 +712,9 @@
             document.getElementById("btnOpenGuide").innerText = lang.btnOpenGuide;
             document.getElementById("btnLang").innerText = lang.btnLangText;
 
-            document.getElementById("mainLblDate").innerText = lang.filterDate;
             document.getElementById("mainLblCountry").innerText = lang.filterCountry;
+            document.getElementById("dateFilter").setAttribute("aria-label", currentLang === 'zh' ? "日期" : currentLang === 'ja' ? "日付" : "Date");
+            document.getElementById("poolFilter").setAttribute("aria-label", lang.filterPool);
             
             document.getElementById("streamBtn").title = lang.streamTooltip;
         }
@@ -708,7 +732,50 @@
                 }
             });
             Array.from(uniqueDates).sort().forEach(date => { select.innerHTML += `<option value="${date}">${date}</option>`; });
-            select.value = cachedVal;
+            if (Array.from(select.options).some(o => o.value === cachedVal)) select.value = cachedVal;
+            else select.value = "";
+        }
+
+        const poolTeams = {
+            euro: {
+                A: ["義大利", "瑞典", "斯洛維尼亞", "捷克", "希臘", "斯洛伐克"],
+                B: ["保加利亞", "北馬其頓", "波蘭", "烏克蘭", "葡萄牙", "以色列"],
+                C: ["芬蘭", "愛沙尼亞", "塞爾維亞", "比利時", "荷蘭", "丹麥"],
+                D: ["羅馬尼亞", "拉脫維亞", "法國", "德國", "土耳其", "瑞士"]
+            },
+            asia: {
+                A: ["澳洲", "巴林", "日本", "阿曼"],
+                B: ["中國", "印度", "伊朗", "紐西蘭"],
+                C: ["韓國", "卡達", "泰國", "台灣"]
+            }
+        };
+
+        function getMatchPool(match) {
+            if (match.type === 'stage' || match.type === 'stage_match') return 'finals';
+            if (match.type !== 'normal') return '';
+            const pools = poolTeams[currentMode] || {};
+            for (const [pool, teams] of Object.entries(pools)) {
+                if (teams.includes(match.h_zh) && teams.includes(match.a_zh)) return pool;
+            }
+            return '';
+        }
+
+        function getPoolLabel(pool) {
+            if (!pool) return '';
+            if (pool === 'finals') return uiText[currentLang].poolFinals;
+            return currentLang === 'ja' ? `プール ${pool}` : `Pool ${pool}`;
+        }
+
+        function generatePoolOptions() {
+            const select = document.getElementById("poolFilter");
+            const cachedVal = select.value;
+            const options = currentMode === 'euro' ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C'];
+            select.innerHTML = `<option value="">${uiText[currentLang].poolAll}</option>`;
+            options.forEach(pool => {
+                select.innerHTML += `<option value="${pool}">${currentLang === 'ja' ? `プール ${pool}` : `Pool ${pool}`}</option>`;
+            });
+            select.innerHTML += `<option value="finals">${uiText[currentLang].poolFinals}</option>`;
+            if (Array.from(select.options).some(o => o.value === cachedVal)) select.value = cachedVal;
         }
 
         function generateCountryChips() {
@@ -774,10 +841,12 @@
         
         function getFilteredMatches() {
             const selectedDate = document.getElementById("dateFilter").value;
+            const selectedPool = document.getElementById("poolFilter").value;
             const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.getAttribute('data-id'));
 
             let matches = [...rawData[currentMode]];
 
+            // 無篩選時維持最直覺的時間軸排序；套用任何篩選後也仍以時間為主要排序。
             matches.sort((a, b) => {
                 const timeA = a.utc ? new Date(a.utc).getTime() : new Date(`2026/${a.local_d}`).getTime();
                 const timeB = b.utc ? new Date(b.utc).getTime() : new Date(`2026/${b.local_d}`).getTime();
@@ -797,6 +866,9 @@
                 }
 
                 if (selectedDate && dateKey !== selectedDate) return false;
+
+                const matchPool = getMatchPool(match);
+                if (selectedPool && matchPool !== selectedPool) return false;
                 
                 if (activeChips.length > 0) {
                     if (match.type !== 'normal') return false;
@@ -840,14 +912,18 @@
                     if (currentLang === 'en') { hName = match.h_en; aName = match.a_en; }
                     else if (currentLang === 'ja') { hName = match.h_ja; aName = match.a_ja; }
 
+                    const poolLabel = getPoolLabel(getMatchPool(match));
                     tr.innerHTML = `
                         <td>${dateDisplay}</td>
                         <td style="font-weight:bold;">${hours}:${minutes}</td>
                         <td>
-                            <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
-                                <span class="team-text-box"><span>${match.h_f}</span><span class="team-name">${hName}</span></span>
-                                <span class="vs-label">VS</span>
-                                <span class="team-text-box"><span>${match.a_f}</span><span class="team-name">${aName}</span></span>
+                            <div class="match-cell">
+                                <div class="match-pair">
+                                    <span class="team-text-box"><span>${match.h_f}</span><span class="team-name">${hName}</span></span>
+                                    <span class="vs-label">VS</span>
+                                    <span class="team-text-box"><span>${match.a_f}</span><span class="team-name">${aName}</span></span>
+                                </div>
+                                <div class="match-stage-note">${poolLabel}</div>
                             </div>
                         </td>`;
                 } else if (match.type === 'stage') {
@@ -862,7 +938,7 @@
                     tr.innerHTML = `
                         <td>${match.local_d} (${wDisplay})<span class="sub-text-note">${uiText[currentLang].localDateLabel}</span></td>
                         <td style="color:#64748b;">${uiText[currentLang].tbdText}</td>
-                        <td style="font-weight:bold; color:#0f172a;">${stageName}</td>`;
+                        <td style="font-weight:700; color:#475569;">${stageName}</td>`;
                 } else if (match.type === 'stage_match') {
                     const matchDate = new Date(match.utc); 
                     const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
@@ -884,10 +960,27 @@
                     if (currentLang === 'en') stageName = match.en_name;
                     else if (currentLang === 'ja') stageName = match.ja_name;
 
+                    const hasTeams = match.h_zh && match.a_zh;
+                    let stageMatchContent = `<div class="stage-match-label">${stageName}</div>`;
+                    if (hasTeams) {
+                        let stageHome = match.h_zh;
+                        let stageAway = match.a_zh;
+                        if (currentLang === 'en') { stageHome = match.h_en; stageAway = match.a_en; }
+                        else if (currentLang === 'ja') { stageHome = match.h_ja; stageAway = match.a_ja; }
+                        stageMatchContent = `
+                            <div class="match-cell">
+                                <div class="match-pair">
+                                    <span class="team-text-box"><span>${match.h_f || ''}</span><span class="team-name">${stageHome}</span></span>
+                                    <span class="vs-label">VS</span>
+                                    <span class="team-text-box"><span>${match.a_f || ''}</span><span class="team-name">${stageAway}</span></span>
+                                </div>
+                                <div class="match-stage-note">${stageName}</div>
+                            </div>`;
+                    }
                     tr.innerHTML = `
                         <td>${dateDisplay}</td>
                         <td style="font-weight:bold;">${hours}:${minutes}</td>
-                        <td style="font-weight:bold; color:#0284c7;">${stageName}</td>`;
+                        <td style="font-weight:bold; color:#0284c7;">${stageMatchContent}</td>`;
                 }
 
                 tbody.appendChild(tr);
