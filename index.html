@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CEV EuroVolley 2026 / AVC 2026 Volleyball Schedule</title>
     <style>
+        /* Cute rounded visual style */
+        :root { --box-radius: 14px; --control-radius: 11px; }
+        body { font-family: "GenSenRounded", "GenSenRounded TW", "源泉圓體", "Noto Sans TC", sans-serif; }
+
         :root {
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
@@ -69,15 +73,15 @@
         .sidebar-title { font-size: 1rem; font-weight: bold; color: #1e293b; }
         .sb-group { display: flex; flex-direction: column; gap: 6px; }
         .sb-label { font-size: 0.8rem; font-weight: bold; color: #64748b; }
-        .sb-toggle-btn { width: 100%; padding: 12px; font-size: 0.9rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; cursor: pointer; text-align: center; color: #475569; }
+        .sb-toggle-btn { width: 100%; padding: 12px; font-size: 0.9rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: var(--control-radius); background: #fff; cursor: pointer; text-align: center; color: #475569; }
         .sb-toggle-btn.active.euro { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
         .sb-toggle-btn.active.asia { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
-        .lang-btn-sb { width: 100%; padding: 10px; font-size: 0.88rem; font-weight: bold; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; }
+        .lang-btn-sb { width: 100%; padding: 10px; font-size: 0.88rem; font-weight: bold; border-radius: var(--control-radius); border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; }
 
         /* 主畫面簡潔篩選區 */
         .main-filter-card {
             background: white;
-            border-radius: 8px;
+            border-radius: var(--box-radius);
             padding: 10px;
             margin-bottom: 10px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -90,14 +94,14 @@
         .filter-group { display: flex; flex-direction: column; gap: 4px; }
         .filter-label { font-size: 0.75rem; font-weight: 700; color: #64748b; }
         .filter-controls { display: flex; width: 100%; gap: 8px; }
-        .filter-control { flex: 1 1 0; min-width: 0; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; min-height: 38px; overflow: hidden; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+        .filter-control { flex: 1 1 0; min-width: 0; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--box-radius); min-height: 38px; overflow: hidden; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
         .filter-control:focus-within { border-color: #94a3b8; box-shadow: 0 0 0 2px rgba(148,163,184,0.12); }
         .filter-icon { flex: 0 0 auto; padding-left: 9px; font-size: 0.82rem; line-height: 1; pointer-events: none; }
         .select-wrap { position: relative; flex: 1; min-width: 0; }
         .select-wrap-full { width: 100%; }
         .main-select { width: 100%; min-width: 0; height: 36px; padding: 0 8px; font-size: 0.82rem; font-weight: 700; border: none; border-radius: 7px; background: transparent; color: #0f172a; outline: none; appearance: auto; -webkit-appearance: auto; cursor: pointer; }
-        .country-selector { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; max-height: 100px; overflow-y: auto; width: 100%; }
-        .country-chip { display: flex; align-items: center; gap: 2px; background: #fff; border: 1px solid #cbd5e1; padding: 3px 6px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; user-select: none; color: #475569; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .country-selector { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--control-radius); width: 100%; }
+        .country-chip { display: flex; align-items: center; gap: 2px; background: #fff; border: 1px solid #cbd5e1; padding: 3px 6px; border-radius: var(--box-radius); font-size: 0.75rem; cursor: pointer; user-select: none; color: #475569; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .country-chip.selected::before { content: "✓"; font-size: 0.68rem; font-weight: 800; }
         body.theme-euro .country-chip.selected { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
         body.theme-asia .country-chip.selected { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
@@ -114,7 +118,7 @@
             width: 100%; 
             overflow-x: auto; 
             background: white; 
-            border-radius: 8px; 
+            border-radius: var(--box-radius); 
             box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
             border: 1px solid var(--border-color); 
             margin-bottom: 75px; 
@@ -169,7 +173,7 @@
             min-height: 38px;
             font-size: 0.82rem;
             font-weight: 700;
-            border-radius: 8px;
+            border-radius: var(--box-radius);
             border: 1px solid transparent;
             color: white;
             cursor: pointer;
@@ -196,10 +200,10 @@
         .modal-lang-btn { font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer; color: #334155; font-weight: bold; }
         .modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
         .modal-body { font-size: 0.83rem; color: #334155; line-height: 1.5; display: flex; flex-direction: column; gap: 10px; }
-        .guide-item { background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 4px solid var(--euro-theme); }
+        .guide-item { background: #f8fafc; padding: 10px; border-radius: var(--control-radius); border-left: 4px solid var(--euro-theme); }
         body.theme-asia .guide-item { border-left-color: var(--asia-theme); }
         .guide-title { font-weight: bold; color: #0f172a; margin-bottom: 3px; font-size: 0.88rem; }
-        .modal-btn { width: 100%; padding: 10px; border: none; border-radius: 6px; background: var(--euro-theme); color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; margin-top: 4px; }
+        .modal-btn { width: 100%; padding: 10px; border: none; border-radius: var(--control-radius); background: var(--euro-theme); color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; margin-top: 4px; }
         body.theme-asia .modal-btn { background: var(--asia-theme); }
         
         .b-text { font-weight: bold; color: #0f172a; }
@@ -242,9 +246,9 @@
         <table>
             <thead>
                 <tr>
-                    <th style="width: 28%;" id="thDate">日期</th>
-                    <th style="width: 22%;" id="thTime">時間</th>
-                    <th style="width: 50%;" id="thMatch">對戰組合</th>
+                    <th style="width: 22%;" id="thDate">日期</th>
+                    <th style="width: 18%;" id="thTime">時間</th>
+                    <th style="width: 60%;" id="thMatch">對戰組合</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -398,10 +402,10 @@
                 { id: "a18", utc: "2026-09-09T08:00:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "中國", a_en: "China", a_ja: "中国", a_f: "🇨🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
 
                 // 亞錦賽決賽階段：8強、4強、銅牌戰、冠軍戰
-                { id: "a_f1", utc: "2026-09-10T06:30:00Z", type: "stage_match", zh_name: "8強賽 - 第1場", en_name: "Quarter Finals - Match 1", ja_name: "準々決勝 - 第1試合" },
-                { id: "a_f2", utc: "2026-09-10T10:30:00Z", type: "stage_match", zh_name: "8強賽 - 第2場", en_name: "Quarter Finals - Match 2", ja_name: "準々決勝 - 第2試合" },
-                { id: "a_f3", utc: "2026-09-11T06:30:00Z", type: "stage_match", zh_name: "8強賽 - 第3場", en_name: "Quarter Finals - Match 3", ja_name: "準々決勝 - 第3試合" },
-                { id: "a_f4", utc: "2026-09-11T10:30:00Z", type: "stage_match", zh_name: "8強賽 - 第4場", en_name: "Quarter Finals - Match 4", ja_name: "準々決勝 - 第4試合" },
+                { id: "a_f1", utc: "2026-09-10T06:30:00Z", h_zh: "泰國", h_en: "Thailand", h_ja: "タイ", h_f: "🇹🇭", a_zh: "澳洲", a_en: "Australia", a_ja: "オーストラリア", a_f: "🇦🇺", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f2", utc: "2026-09-10T10:30:00Z", h_zh: "韓國", h_en: "South Korea", h_ja: "韓国", h_f: "🇰🇷", a_zh: "中國", a_en: "China", a_ja: "中国", a_f: "🇨🇳", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f3", utc: "2026-09-11T06:30:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "台灣", a_en: "Taiwan", a_ja: "台湾", a_f: "🇹🇼", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f4", utc: "2026-09-11T10:30:00Z", h_zh: "日本", h_en: "Japan", h_ja: "日本", h_f: "🇯🇵", a_zh: "印度", a_en: "India", a_ja: "インド", a_f: "🇮🇳", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
                 { id: "a_f5", utc: "2026-09-12T06:30:00Z", type: "stage_match", zh_name: "4強賽 - 第1場", en_name: "Semi Finals - Match 1", ja_name: "準決勝 - 第1試合" },
                 { id: "a_f6", utc: "2026-09-12T10:30:00Z", type: "stage_match", zh_name: "4強賽 - 第2場", en_name: "Semi Finals - Match 2", ja_name: "準決勝 - 第2試合" },
                 { id: "a_f7", utc: "2026-09-13T06:30:00Z", type: "stage_match", zh_name: "🥉 銅牌戰", en_name: "🥉 Bronze Medal Match", ja_name: "🥉 3位決定戦" },
