@@ -95,6 +95,35 @@
         .filter-label { font-size: 0.75rem; font-weight: 700; color: #64748b; }
         .filter-controls { display: flex; width: 100%; gap: 8px; }
         .filter-control { flex: 1 1 0; min-width: 0; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--box-radius); min-height: 38px; overflow: hidden; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+        .date-filter-control { overflow: visible; z-index: 20; }
+        .date-filter-button { width: 100%; min-width: 0; height: 36px; padding: 0 8px; font: inherit; font-size: 0.82rem; font-weight: 700; border: none; background: transparent; color: #0f172a; outline: none; cursor: pointer; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .date-filter-button:focus-visible { box-shadow: inset 0 0 0 2px rgba(148,163,184,0.2); border-radius: 7px; }
+        .date-picker { position: absolute; top: calc(100% + 6px); left: 0; width: min(286px, calc(100vw - 20px)); padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--box-radius); box-shadow: 0 8px 24px rgba(15,23,42,0.16); display: none; z-index: 10001; }
+        .date-picker.show { display: block; }
+        .date-picker-header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; }
+        .calendar-nav-btn { width: 30px; height: 30px; border: none; border-radius: 50%; background: #f1f5f9; color: #334155; font-size: 1.15rem; line-height: 1; cursor: pointer; }
+        .calendar-nav-btn:active { transform: scale(0.95); }
+        .calendar-month { flex: 1; text-align: center; font-size: 0.82rem; font-weight: 800; color: #0f172a; }
+        .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .calendar-weekday { text-align: center; font-size: 0.66rem; font-weight: 700; color: #94a3b8; padding: 3px 0; }
+        .calendar-day { position: relative; width: 100%; aspect-ratio: 1; border: none; border-radius: 50%; background: transparent; color: #334155; font: inherit; font-size: 0.72rem; cursor: pointer; z-index: 1; }
+        .calendar-day:hover { background: #f1f5f9; }
+        .calendar-day.other-month { color: #cbd5e1; }
+        .calendar-day.has-match { font-weight: 800; }
+        .calendar-day.in-range { border-radius: 0; background: #e0f2fe; }
+        .calendar-day.range-start { border-radius: 50% 0 0 50%; }
+        .calendar-day.range-end { border-radius: 0 50% 50% 0; }
+        .calendar-day.single-selected, .calendar-day.range-start:not(.range-end), .calendar-day.range-end:not(.range-start) { background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-day.single-selected, body.theme-euro .calendar-day.range-start:not(.range-end), body.theme-euro .calendar-day.range-end:not(.range-start) { background: var(--euro-theme); }
+        .calendar-day.range-start.range-end { border-radius: 50%; background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-day.range-start.range-end { background: var(--euro-theme); }
+        .calendar-day.today::after { content: ""; position: absolute; bottom: 2px; left: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; transform: translateX(-50%); }
+        .date-picker-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+        .calendar-action { flex: 1; min-height: 32px; border: none; border-radius: var(--control-radius); font: inherit; font-size: 0.74rem; font-weight: 800; cursor: pointer; }
+        .calendar-action.secondary { background: #f1f5f9; color: #64748b; }
+        .calendar-action.primary { background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-action.primary { background: var(--euro-theme); }
+        @media (max-width: 480px) { .date-picker { width: min(286px, calc(100vw - 20px)); } }
         .filter-control:focus-within { border-color: #94a3b8; box-shadow: 0 0 0 2px rgba(148,163,184,0.12); }
         .filter-icon { flex: 0 0 auto; padding-left: 9px; font-size: 0.82rem; line-height: 1; pointer-events: none; }
         .select-wrap { position: relative; flex: 1; min-width: 0; }
@@ -145,8 +174,8 @@
         body.theme-asia th { background-color: var(--asia-theme); }
         body.theme-asia tr:nth-child(even) { background-color: var(--asia-light); }
         .vs-label { color: var(--highlight); font-weight: bold; font-size: 0.7rem; margin: 0 1px; }
-        .team-text-box { display: inline-flex; align-items: center; gap: 2px; font-size: 0.78rem; max-width: 45%; }
-        .team-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .team-text-box { display: inline-flex; align-items: center; gap: 2px; font-size: 0.78rem; max-width: 48%; min-width: 0; }
+        .team-name { overflow: visible; text-overflow: clip; white-space: normal; line-height: 1.15; }
         .tz-status-bar { text-align: center; font-size: 0.72rem; color: var(--highlight); font-weight: bold; margin-bottom: 8px; }
         tr { cursor: pointer; transition: background-color 0.2s; }
         body.theme-euro tr.selected-row { background-color: #cbd5e1 !important; color: #0b1a30; font-weight: 500; }
@@ -223,10 +252,22 @@
 
     <div class="main-filter-card">
         <div class="filter-controls">
-            <div class="filter-control">
+            <div class="filter-control date-filter-control" id="dateFilterControl">
                 <span class="filter-icon" aria-hidden="true">📅</span>
-                <div class="select-wrap">
-                    <select id="dateFilter" class="main-select" onchange="renderTable()" aria-label="Date"><option value="">-- 全日期 --</option></select>
+                <button type="button" id="dateFilterButton" class="date-filter-button" onclick="toggleDatePicker()" aria-label="Date" aria-haspopup="dialog" aria-expanded="false">-- 全日期 --</button>
+                <input type="hidden" id="dateFilter" value="">
+                <div class="date-picker" id="datePicker" role="dialog" aria-label="Date picker">
+                    <div class="date-picker-header">
+                        <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth(-1)" aria-label="Previous month">‹</button>
+                        <div class="calendar-month" id="calendarMonthLabel"></div>
+                        <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth(1)" aria-label="Next month">›</button>
+                    </div>
+                    <div class="calendar-weekdays" id="calendarWeekdays"></div>
+                    <div class="calendar-days" id="calendarDays"></div>
+                    <div class="date-picker-footer">
+                        <button type="button" class="calendar-action secondary" id="calendarClearBtn" onclick="clearDateSelection()">Clear</button>
+                        <button type="button" class="calendar-action primary" id="calendarDoneBtn" onclick="applyDateSelection()">Done</button>
+                    </div>
                 </div>
             </div>
             <div class="filter-control">
@@ -422,7 +463,7 @@
             zh: { 
                 titleEuro: "2026歐錦賽", titleAsia: "2026亞錦賽", 
                 thDate: "日期", thTime: "時間", thMatch: "對戰組合", 
-                allDate: "-- 全日期 --", currentTz: "時區偵測：", 
+                allDate: "-- 全日期 --", datePickerClear: "清除", datePickerDone: "完成", currentTz: "時區偵測：", 
                 textExportAll: "加入畫面中所有賽程",
                 textExportSelectedPrefix: "加入選取 (",
                 textExportSelectedSuffix: "場)",
@@ -440,7 +481,7 @@
             en: { 
                 titleEuro: "CEV EuroVolley 2026", titleAsia: "AVC Men's Continental 2026", 
                 thDate: "Date", thTime: "Time", thMatch: "Matchup", 
-                allDate: "-- All Dates --", currentTz: "Timezone:", 
+                allDate: "-- All Dates --", datePickerClear: "Clear", datePickerDone: "Done", currentTz: "Timezone:", 
                 textExportAll: "Add Shown Schedule",
                 textExportSelectedPrefix: "Add Selected (",
                 textExportSelectedSuffix: ")",
@@ -458,7 +499,7 @@
             ja: { 
                 titleEuro: "欧州選手権 2026", titleAsia: "アジア選手権 2026", 
                 thDate: "日付", thTime: "時間", thMatch: "対戦カード", 
-                allDate: "-- 全日程 --", currentTz: "タイムゾーン：", 
+                allDate: "-- 全日程 --", datePickerClear: "クリア", datePickerDone: "完了", currentTz: "タイムゾーン：", 
                 textExportAll: "表示中の全試合を追加",
                 textExportSelectedPrefix: "選択した試合を追加 (",
                 textExportSelectedSuffix: "件)",
@@ -717,28 +758,305 @@
             document.getElementById("btnLang").innerText = lang.btnLangText;
 
             document.getElementById("mainLblCountry").innerText = lang.filterCountry;
-            document.getElementById("dateFilter").setAttribute("aria-label", currentLang === 'zh' ? "日期" : currentLang === 'ja' ? "日付" : "Date");
+            document.getElementById("dateFilterButton").setAttribute("aria-label", currentLang === 'zh' ? "日期" : currentLang === 'ja' ? "日付" : "Date");
             document.getElementById("poolFilter").setAttribute("aria-label", lang.filterPool);
+            document.getElementById("calendarClearBtn").innerText = lang.datePickerClear;
+            document.getElementById("calendarDoneBtn").innerText = lang.datePickerDone;
+            renderCalendar();
             
             document.getElementById("streamBtn").title = lang.streamTooltip;
         }
 
-        function generateDateOptions() {
-            const select = document.getElementById("dateFilter"); const cachedVal = select.value;
-            select.innerHTML = `<option value="">${uiText[currentLang].allDate}</option>`;
-            const uniqueDates = new Set();
-            rawData[currentMode].forEach(match => {
-                if (match.type === 'normal' || match.type === 'stage_match') {
-                    const d = new Date(match.utc); const localDate = new Date(d.getTime() + (activeTzOffset * 60 * 60 * 1000));
-                    uniqueDates.add(`${String(localDate.getUTCMonth()+1).padStart(2,'0')}/${String(localDate.getUTCDate()).padStart(2,'0')}`);
-                } else if (match.type === 'stage') {
-                    uniqueDates.add(match.local_d);
-                }
-            });
-            Array.from(uniqueDates).sort().forEach(date => { select.innerHTML += `<option value="${date}">${date}</option>`; });
-            if (Array.from(select.options).some(o => o.value === cachedVal)) select.value = cachedVal;
-            else select.value = "";
+        // 已套用的日期篩選（只有按下「完成」後才會更新）
+        let dateRangeStart = null;
+        let dateRangeEnd = null;
+
+        // 本次開啟月曆時的暫存選擇。重新開啟月曆即重新開始一次選擇流程，
+        // 但月曆仍會保留顯示上一次已套用的篩選狀態。
+        let draftDateStart = null;
+        let draftDateEnd = null;
+        let calendarSelectionDirty = false;
+        let calendarViewDate = new Date(2026, 8, 1);
+        let availableDateKeys = new Set();
+
+        function getMatchDateKey(match) {
+            if (match.type === 'normal' || match.type === 'stage_match') {
+                const matchDate = new Date(match.utc);
+                const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
+                return `${localDate.getUTCFullYear()}-${String(localDate.getUTCMonth()+1).padStart(2,'0')}-${String(localDate.getUTCDate()).padStart(2,'0')}`;
+            }
+            if (match.type === 'stage') {
+                const parts = String(match.local_d || '').split('/');
+                if (parts.length === 2) return `2026-${String(parts[0]).padStart(2,'0')}-${String(parts[1]).padStart(2,'0')}`;
+            }
+            return '';
         }
+
+        function getDateLabel(dateKey, endKey = null) {
+            if (!dateKey) return uiText[currentLang].allDate;
+            const [y, m, d] = dateKey.split('-').map(Number);
+            if (endKey) {
+                return `${m}/${d} – ${Number(endKey.split('-')[1])}/${Number(endKey.split('-')[2])}`;
+            }
+            return `${m}/${d}`;
+        }
+
+        function generateDateOptions() {
+            availableDateKeys = new Set();
+            rawData[currentMode].forEach(match => {
+                const key = getMatchDateKey(match);
+                if (key) availableDateKeys.add(key);
+            });
+
+            const selected = document.getElementById('dateFilter').value;
+            dateRangeStart = null;
+            dateRangeEnd = null;
+            if (selected) {
+                const parts = selected.split('|');
+                dateRangeStart = parts[0] || null;
+                dateRangeEnd = parts[1] || null;
+                if (dateRangeStart) {
+                    const [y,m] = dateRangeStart.split('-').map(Number);
+                    calendarViewDate = new Date(y, m - 1, 1);
+                    if (!availableDateKeys.has(dateRangeStart)) {
+                        dateRangeStart = null;
+                        dateRangeEnd = null;
+                    }
+                }
+            }
+            draftDateStart = dateRangeStart;
+            draftDateEnd = dateRangeEnd;
+            calendarSelectionDirty = false;
+            updateDateFilterButton();
+            renderCalendar();
+        }
+
+        function updateDateFilterButton() {
+            const button = document.getElementById('dateFilterButton');
+            const hidden = document.getElementById('dateFilter');
+            if (!button || !hidden) return;
+            if (!dateRangeStart) {
+                hidden.value = '';
+                button.innerText = uiText[currentLang].allDate;
+            } else {
+                hidden.value = dateRangeEnd ? `${dateRangeStart}|${dateRangeEnd}` : dateRangeStart;
+                button.innerText = getDateLabel(dateRangeStart, dateRangeEnd);
+            }
+        }
+
+        function formatCalendarMonth(date) {
+            const formatter = new Intl.DateTimeFormat(currentLang === 'zh' ? 'zh-TW' : currentLang === 'ja' ? 'ja-JP' : 'en-US', { year: 'numeric', month: 'long' });
+            return formatter.format(date);
+        }
+
+        function getCalendarWeekdays() {
+            if (currentLang === 'zh') return ['日','一','二','三','四','五','六'];
+            if (currentLang === 'ja') return ['日','月','火','水','木','金','土'];
+            return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        }
+
+        function dateKeyFromParts(y, m, d) {
+            return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        }
+
+        function getCalendarSelection() {
+            const picker = document.getElementById('datePicker');
+            const isOpen = picker && picker.classList.contains('show');
+            if (isOpen && calendarSelectionDirty) {
+                return { start: draftDateStart, end: draftDateEnd };
+            }
+            return { start: dateRangeStart, end: dateRangeEnd };
+        }
+
+        function renderCalendar() {
+            const monthLabel = document.getElementById('calendarMonthLabel');
+            const weekdays = document.getElementById('calendarWeekdays');
+            const days = document.getElementById('calendarDays');
+            if (!monthLabel || !weekdays || !days) return;
+
+            monthLabel.innerText = formatCalendarMonth(calendarViewDate);
+            weekdays.innerHTML = getCalendarWeekdays().map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+            days.innerHTML = '';
+
+            const selection = getCalendarSelection();
+            const selectedStart = selection.start;
+            const selectedEnd = selection.end;
+            const year = calendarViewDate.getFullYear();
+            const month = calendarViewDate.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDays = new Date(year, month, 0).getDate();
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            const today = new Date();
+            const todayKey = dateKeyFromParts(today.getFullYear(), today.getMonth()+1, today.getDate());
+
+            for (let i = 0; i < totalCells; i++) {
+                let cellYear = year;
+                let cellMonth = month;
+                let dayNumber;
+                let otherMonth = false;
+                if (i < firstDay) {
+                    dayNumber = prevDays - firstDay + i + 1;
+                    cellMonth--;
+                    otherMonth = true;
+                } else if (i >= firstDay + daysInMonth) {
+                    dayNumber = i - firstDay - daysInMonth + 1;
+                    cellMonth++;
+                    otherMonth = true;
+                } else {
+                    dayNumber = i - firstDay + 1;
+                }
+                const cellDate = new Date(cellYear, cellMonth, dayNumber);
+                const key = dateKeyFromParts(cellDate.getFullYear(), cellDate.getMonth()+1, cellDate.getDate());
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'calendar-day';
+                btn.innerText = dayNumber;
+                btn.setAttribute('data-date', key);
+                if (otherMonth) btn.classList.add('other-month');
+                if (availableDateKeys.has(key)) btn.classList.add('has-match');
+                if (key === todayKey) btn.classList.add('today');
+                if (selectedStart && key === selectedStart && selectedEnd && key !== selectedEnd) btn.classList.add('range-start');
+                if (selectedEnd && key === selectedEnd && key !== selectedStart) btn.classList.add('range-end');
+                if (selectedStart && selectedEnd && key > selectedStart && key < selectedEnd) btn.classList.add('in-range');
+                if (selectedStart && selectedEnd && key === selectedStart && selectedStart === selectedEnd) btn.classList.add('single-selected');
+                if (selectedStart && !selectedEnd && key === selectedStart) btn.classList.add('single-selected');
+                if (selectedStart && selectedEnd && key === selectedStart) btn.classList.add('range-start');
+                if (selectedStart && selectedEnd && key === selectedEnd) btn.classList.add('range-end');
+                btn.onclick = () => selectCalendarDate(key);
+                days.appendChild(btn);
+            }
+        }
+
+        function selectCalendarDate(key) {
+            // 日期點擊只修改本次開啟月曆的暫存值，不立即套用，也不關閉月曆。
+            if (!calendarSelectionDirty) {
+                draftDateStart = key;
+                draftDateEnd = null;
+                calendarSelectionDirty = true;
+                renderCalendar();
+                return;
+            }
+
+            if (!draftDateStart) {
+                draftDateStart = key;
+                draftDateEnd = null;
+            } else if (!draftDateEnd) {
+                // 單日選擇：再點同一天＝取消；點不同日期＝建立日期區間。
+                if (key === draftDateStart) {
+                    draftDateStart = null;
+                } else if (key < draftDateStart) {
+                    draftDateEnd = draftDateStart;
+                    draftDateStart = key;
+                } else {
+                    draftDateEnd = key;
+                }
+            } else {
+                // 已有區間：只有再次點擊已選的起／終點才取消該端。
+                // 點擊其他日期則開始一個新的選擇。
+                if (key === draftDateStart) {
+                    draftDateStart = draftDateEnd;
+                    draftDateEnd = null;
+                } else if (key === draftDateEnd) {
+                    draftDateEnd = null;
+                } else {
+                    draftDateStart = key;
+                    draftDateEnd = null;
+                }
+            }
+
+            renderCalendar();
+        }
+
+        function changeCalendarMonth(delta) {
+            calendarViewDate = new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth() + delta, 1);
+            renderCalendar();
+        }
+
+        function toggleDatePicker() {
+            const picker = document.getElementById('datePicker');
+            const button = document.getElementById('dateFilterButton');
+            const isOpen = picker.classList.toggle('show');
+            button.setAttribute('aria-expanded', String(isOpen));
+
+            if (isOpen) {
+                // 每次重新開啟：先顯示目前已套用的日期，但重新開始本次選擇流程。
+                draftDateStart = dateRangeStart;
+                draftDateEnd = dateRangeEnd;
+                calendarSelectionDirty = false;
+                renderCalendar();
+            } else {
+                // 手動關閉：放棄本次尚未套用的暫存選擇。
+                draftDateStart = dateRangeStart;
+                draftDateEnd = dateRangeEnd;
+                calendarSelectionDirty = false;
+                renderCalendar();
+            }
+        }
+
+        function closeDatePicker() {
+            const picker = document.getElementById('datePicker');
+            const button = document.getElementById('dateFilterButton');
+            picker.classList.remove('show');
+            button.setAttribute('aria-expanded', 'false');
+
+            // 關閉月曆時永遠回到最後一次已套用的狀態。
+            draftDateStart = dateRangeStart;
+            draftDateEnd = dateRangeEnd;
+            calendarSelectionDirty = false;
+            renderCalendar();
+        }
+
+        function clearDateSelection() {
+            // 清除是立即動作：取消目前篩選、關閉月曆並顯示全部賽程。
+            dateRangeStart = null;
+            dateRangeEnd = null;
+            draftDateStart = null;
+            draftDateEnd = null;
+            calendarSelectionDirty = false;
+            document.getElementById('dateFilter').value = '';
+            updateDateFilterButton();
+            renderTable();
+            closeDatePicker();
+        }
+
+        function applyDateSelection() {
+            // 未點選任何日期：代表本次沒有修改，維持上一次的篩選。
+            if (!calendarSelectionDirty) {
+                closeDatePicker();
+                return;
+            }
+
+            dateRangeStart = draftDateStart;
+            dateRangeEnd = draftDateEnd;
+
+            if (!dateRangeStart) {
+                document.getElementById('dateFilter').value = '';
+            } else {
+                document.getElementById('dateFilter').value =
+                    dateRangeEnd ? `${dateRangeStart}|${dateRangeEnd}` : dateRangeStart;
+            }
+
+            updateDateFilterButton();
+            renderTable();
+            closeDatePicker();
+        }
+
+        document.addEventListener('click', (event) => {
+            const control = document.getElementById('dateFilterControl');
+            const picker = document.getElementById('datePicker');
+            if (!control || !picker || !picker.classList.contains('show')) return;
+
+            // 使用 click 的 composedPath 判斷原始點擊位置。
+            // 月曆日期按鈕點擊後會觸發 renderCalendar() 重建 DOM，
+            // 因此不能在這裡只用 control.contains(event.target)，否則會被誤判成點擊外部。
+            const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+            const clickedInsideControl = path.length ? path.includes(control) : control.contains(event.target);
+            if (!clickedInsideControl) {
+                // 點擊月曆外部：取消本次尚未完成的修改，保留上一次已套用的篩選。
+                closeDatePicker();
+            }
+        });
 
         const poolTeams = {
             euro: {
@@ -845,6 +1163,9 @@
         
         function getFilteredMatches() {
             const selectedDate = document.getElementById("dateFilter").value;
+            const selectedDateParts = selectedDate ? selectedDate.split('|') : [];
+            const selectedStart = selectedDateParts[0] || '';
+            const selectedEnd = selectedDateParts[1] || selectedStart;
             const selectedPool = document.getElementById("poolFilter").value;
             const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.getAttribute('data-id'));
 
@@ -858,18 +1179,9 @@
             });
 
             return matches.filter(match => {
-                let dateKey = "";
-                if (match.type === 'normal' || match.type === 'stage_match') {
-                    const matchDate = new Date(match.utc); 
-                    const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
-                    const month = String(localDate.getUTCMonth() + 1).padStart(2, '0'); 
-                    const dateNum = String(localDate.getUTCDate()).padStart(2, '0');
-                    dateKey = `${month}/${dateNum}`;
-                } else if (match.type === 'stage') {
-                    dateKey = match.local_d;
-                }
+                const dateKey = getMatchDateKey(match);
 
-                if (selectedDate && dateKey !== selectedDate) return false;
+                if (selectedStart && (dateKey < selectedStart || dateKey > selectedEnd)) return false;
 
                 const matchPool = getMatchPool(match);
                 if (selectedPool && matchPool !== selectedPool) return false;
