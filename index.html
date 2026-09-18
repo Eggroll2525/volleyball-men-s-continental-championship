@@ -412,9 +412,16 @@
                 { id: "e60", utc: "2026-09-17T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_ja: "スロベニア", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
 
                 // 歐錦賽決賽階段：16強、8強、4強、銅牌戰、冠軍戰
-                { id: "e_f1", local_d: "09/19", local_w: "六", local_w_en: "Sat", local_w_ja: "土", zh_name: "16強賽", en_name: "round of 16", ja_name: "ベスト16", type: "stage" },
-                { id: "e_f2", local_d: "09/20", local_w: "日", local_w_en: "Sun", local_w_ja: "日", zh_name: "16強賽", en_name: "round of 16", ja_name: "ベスト16", type: "stage" },
-                { id: "e_f3", local_d: "09/21", local_w: "一", local_w_en: "Mon", local_w_ja: "月", zh_name: "16強賽", en_name: "round of 16", ja_name: "ベスト16", type: "stage" },
+                // 16強賽
+                { id: "e_r16_1", utc: "2026-09-19T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "拉脫維亞", a_en: "Latvia", a_ja: "ラトビア", a_f: "🇱🇻", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_2", utc: "2026-09-19T16:00:00Z", h_zh: "德國", h_en: "Germany", h_ja: "ドイツ", h_f: "🇩🇪", a_zh: "保加利亞", a_en: "Bulgaria", a_ja: "ブルガリア", a_f: "🇧🇬", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_3", utc: "2026-09-20T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_ja: "ウクライナ", h_f: "🇺🇦", a_zh: "羅馬尼亞", a_en: "Romania", a_ja: "ルーマニア", a_f: "🇷🇴", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_4", utc: "2026-09-20T14:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_ja: "フィンランド", h_f: "🇫🇮", a_zh: "希臘", a_en: "Greece", a_ja: "ギリシャ", a_f: "🇬🇷", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_5", utc: "2026-09-20T16:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "葡萄牙", a_en: "Portugal", a_ja: "ポルトガル", a_f: "🇵🇹", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_6", utc: "2026-09-20T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "丹麥", a_en: "Denmark", a_ja: "デンマーク", a_f: "🇩🇰", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_7", utc: "2026-09-21T14:00:00Z", h_zh: "比利時", h_en: "Belgium", h_ja: "ベルギー", h_f: "🇧🇪", a_zh: "捷克", a_en: "Czechia", a_ja: "チェコ", a_f: "🇨🇿", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_8", utc: "2026-09-21T19:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_ja: "スロベニア", h_f: "🇸🇮", a_zh: "塞爾維亞", a_en: "Serbia", a_ja: "セルビア", a_f: "🇷🇸", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                // 未定8強賽程：緊接在全部16強賽之後
                 { id: "e_f4", local_d: "09/22", local_w: "二", local_w_en: "Tue", local_w_ja: "火", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝", type: "stage" },
                 { id: "e_f5", local_d: "09/23", local_w: "三", local_w_en: "Wed", local_w_ja: "水", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝", type: "stage" },
                 { id: "e_f6", local_d: "09/25", local_w: "五", local_w_en: "Fri", local_w_ja: "金", zh_name: "4強賽", en_name: "Semi Finals", ja_name: "準決勝", type: "stage" },
@@ -1277,7 +1284,14 @@
                     else if (currentLang === 'ja') stageName = match.ja_name;
 
                     const hasTeams = match.h_zh && match.a_zh;
-                    let stageMatchContent = `<div class="stage-match-label">${stageName}</div>`;
+                    let siteName = match.site_zh || '';
+                    if (currentLang === 'en') siteName = match.site_en || '';
+                    else if (currentLang === 'ja') siteName = match.site_ja || '';
+
+                    let stageLabel = stageName;
+                    if (siteName) stageLabel += `｜${siteName}`;
+
+                    let stageMatchContent = `<div class="stage-match-label">${stageLabel}</div>`;
                     if (hasTeams) {
                         let stageHome = match.h_zh;
                         let stageAway = match.a_zh;
@@ -1290,13 +1304,13 @@
                                     <span class="vs-label">VS</span>
                                     <span class="team-text-box"><span>${match.a_f || ''}</span><span class="team-name">${stageAway}</span></span>
                                 </div>
-                                <div class="match-stage-note">${stageName}</div>
+                                <div class="match-stage-note">${stageLabel}</div>
                             </div>`;
                     }
                     tr.innerHTML = `
                         <td>${dateDisplay}</td>
                         <td style="font-weight:bold;">${hours}:${minutes}</td>
-                        <td style="font-weight:bold; color:#0284c7;">${stageMatchContent}</td>`;
+                        <td>${stageMatchContent}</td>`;
                 }
 
                 tbody.appendChild(tr);
@@ -1353,10 +1367,16 @@
                     title = `${prefix}${stage} - ${home} VS ${away}`;
                 } else {
                     let stageName = m.zh_name;
-                    if (currentLang === 'en') stageName = m.en_name;
-                    else if (currentLang === 'ja') stageName = m.ja_name;
+                    let home = m.h_zh;
+                    let away = m.a_zh;
+                    if (currentLang === 'en') { stageName = m.en_name; home = m.h_en; away = m.a_en; }
+                    else if (currentLang === 'ja') { stageName = m.ja_name; home = m.h_ja; away = m.a_ja; }
 
-                    title = `${prefix}${stageName}`;
+                    if (m.type === 'stage_match' && home && away) {
+                        title = `${prefix}${stageName} - ${home} VS ${away}`;
+                    } else {
+                        title = `${prefix}${stageName}`;
+                    }
                 }
                 return { title, utc: m.utc };
             });
