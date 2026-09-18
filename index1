@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CEV EuroVolley 2026 / AVC 2026 Volleyball Schedule</title>
+    <style>
+        /* Cute rounded visual style */
+        :root { --box-radius: 14px; --control-radius: 11px; }
+        body { font-family: "GenSenRounded", "GenSenRounded TW", "源泉圓體", "Noto Sans TC", sans-serif; }
+
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --border-color: #cbd5e1;
+            --highlight: #ea580c;
+            --euro-theme: #0b1a30;
+            --euro-light: #f1f5f9;
+            --asia-theme: #0077b6;
+            --asia-light: #e0f2fe;
+        }
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            margin: 0; 
+            padding: 0; 
+        }
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 10px;
+            padding-top: 0; /* 配合 sticky navbar 調整首頁上方邊距 */
+            font-size: 14px;
+        }
+        
+        /* 固定標題列 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--euro-theme);
+            width: 100%;
+        }
+        body.theme-asia .navbar { border-bottom-color: var(--asia-theme); }
+        .nav-title-box { text-align: center; flex-grow: 1; }
+        .nav-title { font-size: 1.05rem; font-weight: bold; color: #0f172a; }
+        .nav-subtitle { font-size: 0.7rem; color: #64748b; font-weight: 500; }
+        .menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #334155; padding: 4px; display: flex; align-items: center; text-decoration: none; }
+        .stream-btn { transition: transform 0.2s ease; }
+        .stream-btn:active { transform: scale(1.2); }
+        
+        /* 側邊欄樣式 */
+        .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; box-shadow: 4px 0 15px rgba(0,0,0,0.1); z-index: 10000; transition: left 0.3s ease; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+        .sidebar.open { left: 0; }
+        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; display: none; }
+        .sidebar-overlay.show { display: block; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 4px; }
+        .sidebar-title { font-size: 1rem; font-weight: bold; color: #1e293b; }
+        .sb-group { display: flex; flex-direction: column; gap: 6px; }
+        .sb-label { font-size: 0.8rem; font-weight: bold; color: #64748b; }
+        .sb-toggle-btn { width: 100%; padding: 12px; font-size: 0.9rem; font-weight: bold; border: 1px solid #cbd5e1; border-radius: var(--control-radius); background: #fff; cursor: pointer; text-align: center; color: #475569; }
+        .sb-toggle-btn.active.euro { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
+        .sb-toggle-btn.active.asia { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
+        .lang-btn-sb { width: 100%; padding: 10px; font-size: 0.88rem; font-weight: bold; border-radius: var(--control-radius); border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; cursor: pointer; }
+
+        /* 主畫面簡潔篩選區 */
+        .main-filter-card {
+            background: white;
+            border-radius: var(--box-radius);
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-label { font-size: 0.75rem; font-weight: 700; color: #64748b; }
+        .filter-controls { display: flex; width: 100%; gap: 8px; }
+        .filter-control { flex: 1 1 0; min-width: 0; display: flex; align-items: center; position: relative; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--box-radius); min-height: 38px; overflow: hidden; transition: border-color 0.18s ease, box-shadow 0.18s ease; }
+        .date-filter-control { overflow: visible; z-index: 20; }
+        .date-filter-button { width: 100%; min-width: 0; height: 36px; padding: 0 8px; font: inherit; font-size: 0.82rem; font-weight: 700; border: none; background: transparent; color: #0f172a; outline: none; cursor: pointer; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .date-filter-button:focus-visible { box-shadow: inset 0 0 0 2px rgba(148,163,184,0.2); border-radius: 7px; }
+        .date-picker { position: absolute; top: calc(100% + 6px); left: 0; width: min(286px, calc(100vw - 20px)); padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--box-radius); box-shadow: 0 8px 24px rgba(15,23,42,0.16); display: none; z-index: 10001; }
+        .date-picker.show { display: block; }
+        .date-picker-header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px; }
+        .calendar-nav-btn { width: 30px; height: 30px; border: none; border-radius: 50%; background: #f1f5f9; color: #334155; font-size: 1.15rem; line-height: 1; cursor: pointer; }
+        .calendar-nav-btn:active { transform: scale(0.95); }
+        .calendar-month { flex: 1; text-align: center; font-size: 0.82rem; font-weight: 800; color: #0f172a; }
+        .calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .calendar-weekday { text-align: center; font-size: 0.66rem; font-weight: 700; color: #94a3b8; padding: 3px 0; }
+        .calendar-day { position: relative; width: 100%; aspect-ratio: 1; border: none; border-radius: 50%; background: transparent; color: #334155; font: inherit; font-size: 0.72rem; cursor: pointer; z-index: 1; }
+        .calendar-day:hover { background: #f1f5f9; }
+        .calendar-day.other-month { color: #cbd5e1; }
+        .calendar-day.has-match { font-weight: 800; }
+        .calendar-day.in-range { border-radius: 0; background: #e0f2fe; }
+        .calendar-day.range-start { border-radius: 50% 0 0 50%; }
+        .calendar-day.range-end { border-radius: 0 50% 50% 0; }
+        .calendar-day.single-selected, .calendar-day.range-start:not(.range-end), .calendar-day.range-end:not(.range-start) { background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-day.single-selected, body.theme-euro .calendar-day.range-start:not(.range-end), body.theme-euro .calendar-day.range-end:not(.range-start) { background: var(--euro-theme); }
+        .calendar-day.range-start.range-end { border-radius: 50%; background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-day.range-start.range-end { background: var(--euro-theme); }
+        .calendar-day.today::after { content: ""; position: absolute; bottom: 2px; left: 50%; width: 3px; height: 3px; border-radius: 50%; background: currentColor; transform: translateX(-50%); }
+        .date-picker-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; }
+        .calendar-action { flex: 1; min-height: 32px; border: none; border-radius: var(--control-radius); font: inherit; font-size: 0.74rem; font-weight: 800; cursor: pointer; }
+        .calendar-action.secondary { background: #f1f5f9; color: #64748b; }
+        .calendar-action.primary { background: var(--asia-theme); color: #fff; }
+        body.theme-euro .calendar-action.primary { background: var(--euro-theme); }
+        @media (max-width: 480px) { .date-picker { width: min(286px, calc(100vw - 20px)); } }
+        .filter-control:focus-within { border-color: #94a3b8; box-shadow: 0 0 0 2px rgba(148,163,184,0.12); }
+        .filter-icon { flex: 0 0 auto; padding-left: 9px; font-size: 0.82rem; line-height: 1; pointer-events: none; }
+        .select-wrap { position: relative; flex: 1; min-width: 0; }
+        .select-wrap-full { width: 100%; }
+        .main-select { width: 100%; min-width: 0; height: 36px; padding: 0 8px; font-size: 0.82rem; font-weight: 700; border: none; border-radius: 7px; background: transparent; color: #0f172a; outline: none; appearance: auto; -webkit-appearance: auto; cursor: pointer; }
+        .country-selector { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--control-radius); width: 100%; }
+        .country-chip { display: flex; align-items: center; gap: 2px; background: #fff; border: 1px solid #cbd5e1; padding: 3px 6px; border-radius: var(--box-radius); font-size: 0.75rem; cursor: pointer; user-select: none; color: #475569; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .country-chip.selected::before { content: "✓"; font-size: 0.68rem; font-weight: 800; }
+        body.theme-euro .country-chip.selected { background: var(--euro-theme); color: white; border-color: var(--euro-theme); }
+        body.theme-asia .country-chip.selected { background: var(--asia-theme); color: white; border-color: var(--asia-theme); }
+        .match-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+        .match-pair { display: flex; justify-content: center; align-items: center; gap: 4px; width: 100%; }
+        .match-stage-note { font-size: 0.62rem; line-height: 1.1; color: #94a3b8; font-weight: 600; letter-spacing: 0.01em; }
+        .stage-match-label { font-size: 0.82rem; font-weight: 700; color: #0284c7; }
+
+        .report-link-box { margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 12px; text-align: center; }
+        .report-text-link { font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+        
+        /* 表格響應式修復 */
+        .table-wrapper { 
+            width: 100%; 
+            overflow-x: auto; 
+            background: white; 
+            border-radius: var(--box-radius); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
+            border: 1px solid var(--border-color); 
+            margin-bottom: 75px; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            text-align: center; 
+            table-layout: fixed;
+        }
+        th, td { 
+            padding: 10px 2px; 
+            border-bottom: 1px solid var(--border-color); 
+            border-right: 1px solid var(--border-color); 
+            font-size: 0.8rem; 
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        th:last-child, td:last-child { border-right: none; }
+        th { color: white; font-weight: 600; position: sticky; top: 0; font-size: 0.8rem; }
+        .sub-text-note { font-size: 0.68rem; color: #64748b; display: block; font-weight: normal; margin-top: 2px; }
+        body.theme-euro th { background-color: var(--euro-theme); }
+        body.theme-euro tr:nth-child(even) { background-color: var(--euro-light); }
+        body.theme-asia th { background-color: var(--asia-theme); }
+        body.theme-asia tr:nth-child(even) { background-color: var(--asia-light); }
+        .vs-label { color: var(--highlight); font-weight: bold; font-size: 0.7rem; margin: 0 1px; }
+        .team-text-box { display: inline-flex; align-items: center; gap: 2px; font-size: 0.78rem; max-width: 48%; min-width: 0; }
+        .team-name { overflow: visible; text-overflow: clip; white-space: normal; line-height: 1.15; }
+        .tz-status-bar { text-align: center; font-size: 0.72rem; color: var(--highlight); font-weight: bold; margin-bottom: 8px; }
+        tr { cursor: pointer; transition: background-color 0.2s; }
+        body.theme-euro tr.selected-row { background-color: #cbd5e1 !important; color: #0b1a30; font-weight: 500; }
+        body.theme-asia tr.selected-row { background-color: #bae6fd !important; color: #005682; font-weight: 500; }
+        
+        /* 動態切換底部列 (Cart Drawer) */
+        .cart-drawer { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: #ffffff; 
+            box-shadow: 0 -3px 12px rgba(0,0,0,0.12); 
+            padding: 8px 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            z-index: 9998; 
+            border-top: 1px solid #e2e8f0; 
+        }
+        .cart-btn-full {
+            flex: 1;
+            padding: 9px 6px;
+            min-height: 38px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border-radius: var(--box-radius);
+            border: 1px solid transparent;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            white-space: nowrap;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+        }
+        .cart-btn-full:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+        body.theme-euro .btn-primary-drawer { background: var(--euro-theme); border-color: var(--euro-theme); }
+        body.theme-asia .btn-primary-drawer { background: var(--asia-theme); border-color: var(--asia-theme); }
+        .btn-selected-drawer { background: #10b981; border-color: #10b981; }
+
+        /* Modal 使用說明蓋版樣式 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.show { display: flex; }
+        .modal-card { background: white; border-radius: 12px; max-width: 400px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 12px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+        .modal-title-box { display: flex; align-items: center; gap: 8px; }
+        .modal-title { font-size: 1.05rem; font-weight: bold; color: #0f172a; }
+        .modal-lang-btn { font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer; color: #334155; font-weight: bold; }
+        .modal-close { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b; }
+        .modal-body { font-size: 0.83rem; color: #334155; line-height: 1.5; display: flex; flex-direction: column; gap: 10px; }
+        .guide-item { background: #f8fafc; padding: 10px; border-radius: var(--control-radius); border-left: 4px solid var(--euro-theme); }
+        body.theme-asia .guide-item { border-left-color: var(--asia-theme); }
+        .guide-title { font-weight: bold; color: #0f172a; margin-bottom: 3px; font-size: 0.88rem; }
+        .modal-btn { width: 100%; padding: 10px; border: none; border-radius: var(--control-radius); background: var(--euro-theme); color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-align: center; margin-top: 4px; }
+        body.theme-asia .modal-btn { background: var(--asia-theme); }
+        
+        .b-text { font-weight: bold; color: #0f172a; }
+    </style>
+</head>
+<body class="theme-euro">
+    <div class="navbar">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <div class="nav-title-box">
+            <div class="nav-title" id="textTitleMain">2026歐錦賽</div>
+            <div class="nav-subtitle" id="textTitleSub">CEV EuroVolley 2026</div>
+        </div>
+        <a id="streamBtn" class="menu-btn stream-btn" href="https://www.eurovolley.tv/pages/l9h2Cu-QQ" target="_blank" rel="noopener noreferrer" title="前往觀看轉播">📺</a>
+    </div>
+    
+    <div class="tz-status-bar" id="tzStatusText">正在偵測時區...</div>
+
+    <div class="main-filter-card">
+        <div class="filter-controls">
+            <div class="filter-control date-filter-control" id="dateFilterControl">
+                <span class="filter-icon" aria-hidden="true">📅</span>
+                <button type="button" id="dateFilterButton" class="date-filter-button" onclick="toggleDatePicker()" aria-label="Date" aria-haspopup="dialog" aria-expanded="false">-- 全日期 --</button>
+                <input type="hidden" id="dateFilter" value="">
+                <div class="date-picker" id="datePicker" role="dialog" aria-label="Date picker">
+                    <div class="date-picker-header">
+                        <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth(-1)" aria-label="Previous month">‹</button>
+                        <div class="calendar-month" id="calendarMonthLabel"></div>
+                        <button type="button" class="calendar-nav-btn" onclick="changeCalendarMonth(1)" aria-label="Next month">›</button>
+                    </div>
+                    <div class="calendar-weekdays" id="calendarWeekdays"></div>
+                    <div class="calendar-days" id="calendarDays"></div>
+                    <div class="date-picker-footer">
+                        <button type="button" class="calendar-action secondary" id="calendarClearBtn" onclick="clearDateSelection()">Clear</button>
+                        <button type="button" class="calendar-action primary" id="calendarDoneBtn" onclick="applyDateSelection()">Done</button>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-control">
+                <span class="filter-icon" aria-hidden="true">🏐</span>
+                <div class="select-wrap select-wrap-full">
+                    <select id="poolFilter" class="main-select" onchange="renderTable()" aria-label="Pool"><option value="">分組</option></select>
+                </div>
+            </div>
+        </div>
+        <div class="filter-group">
+            <div class="filter-label" id="mainLblCountry">🔍 隊伍（可複選）</div>
+            <div class="country-selector" id="countryContainer"></div>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 22%;" id="thDate">日期</th>
+                    <th style="width: 18%;" id="thTime">時間</th>
+                    <th style="width: 60%;" id="thMatch">對戰組合</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- 側邊欄 -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title" id="sbMenuTitle">賽事選單 / Menu</div>
+            <button class="menu-btn" style="font-size:1.2rem;" onclick="toggleSidebar()">✕</button>
+        </div>
+        <div class="sb-group">
+            <div class="sb-label" id="sbLblTour">🏆 選擇賽事 / Tournament:</div>
+            <button class="sb-toggle-btn active euro" id="btnEuro" onclick="switchTournament('euro')">歐錦賽 / EuroVolley</button>
+            <button class="sb-toggle-btn asia" id="btnAsia" onclick="switchTournament('asia')">亞錦賽 / AVC</button>
+        </div>
+        <div class="sb-group">
+            <div class="sb-label" id="sbLblLang">🌐 語言 / Language:</div>
+            <button class="lang-btn-sb" id="btnLang" onclick="toggleLanguage()">繁體中文</button>
+        </div>
+        <div class="sb-group">
+            <div class="sb-label" id="sbLblGuide">📖 說明 / Help:</div>
+            <button class="sb-toggle-btn" style="background:#f1f5f9; border-color:#cbd5e1; color:#1e293b; padding:10px; font-size:0.85rem;" onclick="openGuideModal()"><span id="btnOpenGuide">查看使用說明</span></button>
+        </div>
+        <div class="report-link-box">
+            <a href="https://www.instagram.com/eggroll.25" target="_blank" class="report-text-link" id="reportBugLink" onclick="openInstagram(event)">⚠️ 回報問題 / Report Bug</a>
+        </div>
+    </div>
+
+    <!-- 動態切換底部列 -->
+    <div class="cart-drawer" id="cartDrawer">
+        <button class="cart-btn-full btn-primary-drawer" id="btnExportAllShown" onclick="handleFilteredCalendarExport()">
+            📅 <span id="textExportAll">加入畫面中所有賽程</span>
+        </button>
+        <button class="cart-btn-full btn-selected-drawer" id="btnExportSelected" style="display: none;" onclick="handleCartCalendarExport()">
+            📅 <span id="textExportSelected">加入選取 (0場)</span>
+        </button>
+    </div>
+
+    <!-- 使用說明 Modal -->
+    <div class="modal-overlay" id="guideModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-box">
+                    <div class="modal-title" id="guideTitle">📖 使用說明</div>
+                    <button class="modal-lang-btn" onclick="toggleModalLang()" id="btnModalLangToggle">English</button>
+                </div>
+                <button class="modal-close" onclick="closeGuideModal()">✕</button>
+            </div>
+            <div class="modal-body" id="guideContentBox"></div>
+            <button class="modal-btn" onclick="closeGuideModal()" id="btnGuideClose">我知道了</button>
+        </div>
+    </div>
+
+    <script>
+        const rawData = {
+            euro: [
+                // 預賽
+                { id: "e1", utc: "2026-09-09T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_ja: "ブルガリア", h_f: "🇧🇬", a_zh: "北馬其頓", a_en: "N. Macedonia", a_ja: "北マケドニア", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e2", utc: "2026-09-09T17:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_ja: "ルーマニア", h_f: "🇷🇴", a_zh: "拉脫維亞", a_en: "Latvia", a_ja: "ラトビア", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e3", utc: "2026-09-10T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "葡萄牙", a_en: "Portugal", a_ja: "ポルトガル", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e4", utc: "2026-09-10T14:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "瑞士", a_en: "Switzerland", a_ja: "スイス", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e5", utc: "2026-09-10T16:00:00Z", h_zh: "以色列", h_en: "Israel", h_ja: "イスラエル", h_f: "🇮🇱", a_zh: "烏克蘭", a_en: "Ukraine", a_ja: "ウクライナ", a_f: "🇺🇦", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e6", utc: "2026-09-10T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_ja: "フィンランド", h_f: "🇫🇮", a_zh: "丹麥", a_en: "Denmark", a_ja: "デンマーク", a_f: "🇩🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e7", utc: "2026-09-10T17:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_ja: "トルコ", h_f: "🇹🇷", a_zh: "德國", a_en: "Germany", a_ja: "ドイツ", a_f: "🇩🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e8", utc: "2026-09-10T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "瑞典", a_en: "Sweden", a_ja: "スウェーデン", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e9", utc: "2026-09-11T14:00:00Z", h_zh: "捷克", h_en: "Czechia", h_ja: "チェコ", h_f: "🇨🇿", a_zh: "希臘", a_en: "Greece", a_ja: "ギリシャ", a_f: "🇬🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e10", utc: "2026-09-11T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_ja: "ウクライナ", h_f: "🇺🇦", a_zh: "北馬其頓", a_en: "N. Macedonia", a_ja: "北マケドニア", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e11", utc: "2026-09-11T14:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_ja: "オランダ", h_f: "🇳🇱", a_zh: "比利時", a_en: "Belgium", a_ja: "ベルギー", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e12", utc: "2026-09-11T14:00:00Z", h_zh: "德國", h_en: "Germany", h_ja: "ドイツ", h_f: "🇩🇪", a_zh: "拉脫維亞", a_en: "Latvia", a_ja: "ラトビア", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e13", utc: "2026-09-11T16:00:00Z", h_zh: "葡萄牙", h_en: "Portugal", h_ja: "ポルトガル", h_f: "🇵🇹", a_zh: "保加利亞", a_en: "Bulgaria", a_ja: "ブルガリア", a_f: "🇧🇬", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e14", utc: "2026-09-11T17:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_ja: "セルビア", h_f: "🇷🇸", a_zh: "愛沙尼亞", a_en: "Estonia", a_ja: "エストニア", a_f: "🇪🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e15", utc: "2026-09-11T17:00:00Z", h_zh: "瑞士", h_en: "Switzerland", h_ja: "スイス", h_f: "🇨🇭", a_zh: "羅馬尼亞", a_en: "Romania", a_ja: "ルーマニア", a_f: "🇷🇴", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e16", utc: "2026-09-11T19:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_ja: "スロバキア", h_f: "🇸🇰", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_ja: "スロベニア", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e17", utc: "2026-09-12T12:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_ja: "デンマーク", h_f: "🇩🇰", a_zh: "荷蘭", a_en: "Netherlands", a_ja: "オランダ", a_f: "🇳🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e18", utc: "2026-09-12T14:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_ja: "スウェーデン", h_f: "🇸🇪", a_zh: "捷克", a_en: "Czechia", a_ja: "チェコ", a_f: "🇨🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e19", utc: "2026-09-12T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "以色列", a_en: "Israel", a_ja: "イスラエル", a_f: "🇮🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e20", utc: "2026-09-12T14:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "土耳其", a_en: "Turkey", a_ja: "トルコ", a_f: "🇹🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e21", utc: "2026-09-12T15:00:00Z", h_zh: "比利時", h_en: "Belgium", h_ja: "ベルギー", h_f: "🇧🇪", a_zh: "芬蘭", a_en: "Finland", a_ja: "フィンランド", a_f: "🇫🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e22", utc: "2026-09-12T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_ja: "ブルガリア", h_f: "🇧🇬", a_zh: "烏克蘭", a_en: "Ukraine", a_ja: "ウクライナ", a_f: "🇺🇦", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e23", utc: "2026-09-12T17:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_ja: "ルーマニア", h_f: "🇷🇴", a_zh: "德國", a_en: "Germany", a_ja: "ドイツ", a_f: "🇩🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e24", utc: "2026-09-12T19:05:00Z", h_zh: "希臘", h_en: "Greece", h_ja: "ギリシャ", h_f: "🇬🇷", a_zh: "義大利", a_en: "Italy", a_ja: "イタリア", a_f: "🇮🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e25", utc: "2026-09-13T12:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_ja: "エストニア", h_f: "🇪🇪", a_zh: "丹麥", a_en: "Denmark", a_ja: "デンマーク", a_f: "🇩🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e26", utc: "2026-09-13T14:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_ja: "スロベニア", h_f: "🇸🇮", a_zh: "瑞典", a_en: "Sweden", a_ja: "スウェーデン", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e27", utc: "2026-09-13T13:00:00Z", h_zh: "葡萄牙", h_en: "Portugal", h_ja: "ポルトガル", h_f: "🇵🇹", a_zh: "以色列", a_en: "Israel", a_ja: "イスラエル", a_f: "🇮🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e28", utc: "2026-09-13T14:00:00Z", h_zh: "瑞士", h_en: "Switzerland", h_ja: "スイス", h_f: "🇨🇭", a_zh: "土耳其", a_en: "Turkey", a_ja: "トルコ", a_f: "🇹🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e29", utc: "2026-09-13T15:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_ja: "フィンランド", h_f: "🇫🇮", a_zh: "塞爾維亞", a_en: "Serbia", a_ja: "セルビア", a_f: "🇷🇸", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e30", utc: "2026-09-13T16:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_ja: "北マケドニア", h_f: "🇲🇰", a_zh: "波蘭", a_en: "Poland", a_ja: "ポーランド", a_f: "🇵🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e31", utc: "2026-09-13T17:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_ja: "ラトビア", h_f: "🇱🇻", a_zh: "法國", a_en: "France", a_ja: "フランス", a_f: "🇫🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e32", utc: "2026-09-13T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "斯洛伐克", a_en: "Slovakia", a_ja: "スロバキア", a_f: "🇸🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e33", utc: "2026-09-14T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_ja: "スロバキア", h_f: "🇸🇰", a_zh: "捷克", a_en: "Czechia", a_ja: "チェコ", a_f: "🇨🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e34", utc: "2026-09-14T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_ja: "ウクライナ", h_f: "🇺🇦", a_zh: "葡萄牙", a_en: "Portugal", a_ja: "ポルトガル", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e35", utc: "2026-09-14T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_ja: "セルビア", h_f: "🇷🇸", a_zh: "荷蘭", a_en: "Netherlands", a_ja: "オランダ", a_f: "🇳🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e36", utc: "2026-09-14T14:00:00Z", h_zh: "德國", h_en: "Germany", h_ja: "ドイツ", h_f: "🇩🇪", a_zh: "瑞士", a_en: "Switzerland", a_ja: "スイス", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e37", utc: "2026-09-14T16:00:00Z", h_zh: "保加利亞", h_en: "Bulgaria", h_ja: "ブルガリア", h_f: "🇧🇬", a_zh: "以色列", a_en: "Israel", a_ja: "イスラエル", a_f: "🇮🇱", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e38", utc: "2026-09-14T17:00:00Z", h_zh: "愛沙尼亞", h_en: "Estonia", h_ja: "エストニア", h_f: "🇪🇪", a_zh: "比利時", a_en: "Belgium", a_ja: "ベルギー", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e39", utc: "2026-09-14T17:00:00Z", h_zh: "羅馬尼亞", h_en: "Romania", h_ja: "ルーマニア", h_f: "🇷🇴", a_zh: "土耳其", a_en: "Turkey", a_ja: "トルコ", a_f: "🇹🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e40", utc: "2026-09-14T19:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_ja: "スロベニア", h_f: "🇸🇮", a_zh: "希臘", a_en: "Greece", a_ja: "ギリシャ", a_f: "🇬🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e41", utc: "2026-09-15T14:00:00Z", h_zh: "希臘", h_en: "Greece", h_ja: "ギリシャ", h_f: "🇬🇷", a_zh: "瑞典", a_en: "Sweden", a_ja: "スウェーデン", a_f: "🇸🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e42", utc: "2026-09-15T13:00:00Z", h_zh: "北馬其頓", h_en: "N. Macedonia", h_ja: "北マケドニア", h_f: "🇲🇰", a_zh: "葡萄牙", a_en: "Portugal", a_ja: "ポルトガル", a_f: "🇵🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e43", utc: "2026-09-15T14:00:00Z", h_zh: "比利時", h_en: "Belgium", h_ja: "ベルギー", h_f: "🇧🇪", a_zh: "丹麥", a_en: "Denmark", a_ja: "デンマーク", a_f: "🇩🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e44", utc: "2026-09-15T14:00:00Z", h_zh: "拉脫維亞", h_en: "Latvia", h_ja: "ラトビア", h_f: "🇱🇻", a_zh: "瑞士", a_en: "Switzerland", a_ja: "スイス", a_f: "🇨🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e45", utc: "2026-09-15T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "烏克蘭", a_en: "Ukraine", a_ja: "ウクライナ", a_f: "🇺🇦", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e46", utc: "2026-09-15T17:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_ja: "オランダ", h_f: "🇳🇱", a_zh: "芬蘭", a_en: "Finland", a_ja: "フィンランド", a_f: "🇫🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e47", utc: "2026-09-15T17:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "德國", a_en: "Germany", a_ja: "ドイツ", a_f: "🇩🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e48", utc: "2026-09-15T19:05:00Z", h_zh: "捷克", h_en: "Czechia", h_ja: "チェコ", h_f: "🇨🇿", a_zh: "義大利", a_en: "Italy", a_ja: "イタリア", a_f: "🇮🇹", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e49", utc: "2026-09-16T14:00:00Z", h_zh: "瑞典", h_en: "Sweden", h_ja: "スウェーデン", h_f: "🇸🇪", a_zh: "斯洛伐克", a_en: "Slovakia", a_ja: "スロバキア", a_f: "🇸🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e50", utc: "2026-09-16T13:00:00Z", h_zh: "以色列", h_en: "Israel", h_ja: "イスラエル", h_f: "🇮🇱", a_zh: "北馬其頓", a_en: "N. Macedonia", a_ja: "北マケドニア", a_f: "🇲🇰", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e51", utc: "2026-09-16T14:00:00Z", h_zh: "丹麥", h_en: "Denmark", h_ja: "デンマーク", h_f: "🇩🇰", a_zh: "塞爾維亞", a_en: "Serbia", a_ja: "セルビア", a_f: "🇷🇸", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e52", utc: "2026-09-16T14:00:00Z", h_zh: "土耳其", h_en: "Turkey", h_ja: "トルコ", h_f: "🇹🇷", a_zh: "拉脫維亞", a_en: "Latvia", a_ja: "ラトビア", a_f: "🇱🇻", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e53", utc: "2026-09-16T16:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "保加利亞", a_en: "Bulgaria", a_ja: "ブルガリア", a_f: "🇧🇬", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e54", utc: "2026-09-16T17:00:00Z", h_zh: "荷蘭", h_en: "Netherlands", h_ja: "オランダ", h_f: "🇳🇱", a_zh: "愛沙尼亞", a_en: "Estonia", a_ja: "エストニア", a_f: "🇪🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e55", utc: "2026-09-16T17:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "羅馬尼亞", a_en: "Romania", a_ja: "ルーマニア", a_f: "🇷🇴", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e56", utc: "2026-09-16T19:00:00Z", h_zh: "捷克", h_en: "Czechia", h_ja: "チェコ", h_f: "🇨🇿", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_ja: "スロベニア", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e57", utc: "2026-09-17T14:00:00Z", h_zh: "斯洛伐克", h_en: "Slovakia", h_ja: "スロバキア", h_f: "🇸🇰", a_zh: "希臘", a_en: "Greece", a_ja: "ギリシャ", a_f: "🇬🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e58", utc: "2026-09-17T14:00:00Z", h_zh: "塞爾維亞", h_en: "Serbia", h_ja: "セルビア", h_f: "🇷🇸", a_zh: "比利時", a_en: "Belgium", a_ja: "ベルギー", a_f: "🇧🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e59", utc: "2026-09-17T17:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_ja: "フィンランド", h_f: "🇫🇮", a_zh: "愛沙尼亞", a_en: "Estonia", a_ja: "エストニア", a_f: "🇪🇪", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "e60", utc: "2026-09-17T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "斯洛維尼亞", a_en: "Slovenia", a_ja: "スロベニア", a_f: "🇸🇮", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+
+                // 歐錦賽決賽階段：16強、8強、4強、銅牌戰、冠軍戰
+                // 16強賽
+                { id: "e_r16_1", utc: "2026-09-19T13:00:00Z", h_zh: "波蘭", h_en: "Poland", h_ja: "ポーランド", h_f: "🇵🇱", a_zh: "拉脫維亞", a_en: "Latvia", a_ja: "ラトビア", a_f: "🇱🇻", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_2", utc: "2026-09-19T16:00:00Z", h_zh: "德國", h_en: "Germany", h_ja: "ドイツ", h_f: "🇩🇪", a_zh: "保加利亞", a_en: "Bulgaria", a_ja: "ブルガリア", a_f: "🇧🇬", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_3", utc: "2026-09-20T13:00:00Z", h_zh: "烏克蘭", h_en: "Ukraine", h_ja: "ウクライナ", h_f: "🇺🇦", a_zh: "羅馬尼亞", a_en: "Romania", a_ja: "ルーマニア", a_f: "🇷🇴", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_4", utc: "2026-09-20T14:00:00Z", h_zh: "芬蘭", h_en: "Finland", h_ja: "フィンランド", h_f: "🇫🇮", a_zh: "希臘", a_en: "Greece", a_ja: "ギリシャ", a_f: "🇬🇷", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_5", utc: "2026-09-20T16:00:00Z", h_zh: "法國", h_en: "France", h_ja: "フランス", h_f: "🇫🇷", a_zh: "葡萄牙", a_en: "Portugal", a_ja: "ポルトガル", a_f: "🇵🇹", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_6", utc: "2026-09-20T19:05:00Z", h_zh: "義大利", h_en: "Italy", h_ja: "イタリア", h_f: "🇮🇹", a_zh: "丹麥", a_en: "Denmark", a_ja: "デンマーク", a_f: "🇩🇰", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_7", utc: "2026-09-21T14:00:00Z", h_zh: "比利時", h_en: "Belgium", h_ja: "ベルギー", h_f: "🇧🇪", a_zh: "捷克", a_en: "Czechia", a_ja: "チェコ", a_f: "🇨🇿", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                { id: "e_r16_8", utc: "2026-09-21T19:00:00Z", h_zh: "斯洛維尼亞", h_en: "Slovenia", h_ja: "スロベニア", h_f: "🇸🇮", a_zh: "塞爾維亞", a_en: "Serbia", a_ja: "セルビア", a_f: "🇷🇸", type: "stage_match", zh_name: "16強賽", en_name: "Round of 16", ja_name: "ベスト16" },
+                // 未定8強賽程：緊接在全部16強賽之後
+                { id: "e_f4", local_d: "09/22", local_w: "二", local_w_en: "Tue", local_w_ja: "火", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝", type: "stage" },
+                { id: "e_f5", local_d: "09/23", local_w: "三", local_w_en: "Wed", local_w_ja: "水", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝", type: "stage" },
+                { id: "e_f6", local_d: "09/25", local_w: "五", local_w_en: "Fri", local_w_ja: "金", zh_name: "4強賽", en_name: "Semi Finals", ja_name: "準決勝", type: "stage" },
+                { id: "e_f7", local_d: "09/26", local_w: "六", local_w_en: "Sat", local_w_ja: "土", zh_name: "🥉 銅牌戰", en_name: "🥉 Bronze Medal Match", ja_name: "🥉 3位決定戦", type: "stage" },
+                { id: "e_f8", local_d: "09/26", local_w: "六", local_w_en: "Sat", local_w_ja: "土", zh_name: "🥇 冠軍戰", en_name: "🥇 Gold Medal Match", ja_name: "🥇 決勝戦", type: "stage" }
+            ],
+            asia: [
+                // 預賽
+                { id: "a1", utc: "2026-09-04T03:30:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "紐西蘭", a_en: "New Zealand", a_ja: "ニュージーランド", a_f: "🇳🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a2", utc: "2026-09-04T07:00:00Z", h_zh: "韓國", h_en: "South Korea", h_ja: "韓国", h_f: "🇰🇷", a_zh: "台灣", a_en: "Taiwan", a_ja: "台湾", a_f: "🇹🇼", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a3", utc: "2026-09-04T10:30:00Z", h_zh: "日本", h_en: "Japan", h_ja: "日本", h_f: "🇯🇵", a_zh: "阿曼", a_en: "Oman", a_ja: "オマーン", a_f: "🇴🇲", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a4", utc: "2026-09-05T01:00:00Z", h_zh: "澳洲", h_en: "Australia", h_ja: "オーストラリア", h_f: "🇦🇺", a_zh: "巴林", a_en: "Bahrain", a_ja: "バーレーン", a_f: "🇧🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a5", utc: "2026-09-05T04:30:00Z", h_zh: "中國", h_en: "China", h_ja: "中国", h_f: "🇨🇳", a_zh: "印度", a_en: "India", a_ja: "インド", a_f: "🇮🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a6", utc: "2026-09-05T08:00:00Z", h_zh: "卡達", h_en: "Qatar", h_ja: "カタール", h_f: "🇶🇦", a_zh: "泰國", a_en: "Thailand", a_ja: "タイ", a_f: "🇹🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a7", utc: "2026-09-06T01:00:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "印度", a_en: "India", a_ja: "インド", a_f: "🇮🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a8", utc: "2026-09-06T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_ja: "カタール", h_f: "🇶🇦", a_zh: "台灣", a_en: "Taiwan", a_ja: "台湾", a_f: "🇹🇼", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a9", utc: "2026-09-06T10:30:00Z", h_zh: "日本", h_en: "Japan", h_ja: "日本", h_f: "🇯🇵", a_zh: "巴林", a_en: "Bahrain", a_ja: "バーレーン", a_f: "🇧🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a10", utc: "2026-09-07T01:00:00Z", h_zh: "阿曼", h_en: "Oman", h_ja: "オマーン", h_f: "🇴🇲", a_zh: "澳洲", a_en: "Australia", a_ja: "オーストラリア", a_f: "🇦🇺", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a11", utc: "2026-09-07T04:30:00Z", h_zh: "紐西蘭", h_en: "New Zealand", h_ja: "ニュージーランド", h_f: "🇳🇿", a_zh: "中國", a_en: "China", a_ja: "中国", a_f: "🇨🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a12", utc: "2026-09-07T08:00:00Z", h_zh: "泰國", h_en: "Thailand", h_ja: "タイ", h_f: "🇹🇭", a_zh: "韓國", a_en: "South Korea", a_ja: "韓国", a_f: "🇰🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a13", utc: "2026-09-08T01:00:00Z", h_zh: "印度", h_en: "India", h_ja: "インド", h_f: "🇮🇳", a_zh: "紐西蘭", a_en: "New Zealand", a_ja: "ニュージーランド", a_f: "🇳🇿", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a14", utc: "2026-09-08T04:30:00Z", h_zh: "卡達", h_en: "Qatar", h_ja: "カタール", h_f: "🇶🇦", a_zh: "韓國", a_en: "South Korea", a_ja: "韓国", a_f: "🇰🇷", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a15", utc: "2026-09-08T10:30:00Z", h_zh: "日本", h_en: "Japan", h_ja: "日本", h_f: "🇯🇵", a_zh: "澳洲", a_en: "Australia", a_ja: "オーストラリア", a_f: "🇦🇺", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a16", utc: "2026-09-09T01:00:00Z", h_zh: "巴林", h_en: "Bahrain", h_ja: "バーレーン", h_f: "🇧🇭", a_zh: "阿曼", a_en: "Oman", a_ja: "オマーン", a_f: "🇴🇲", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a17", utc: "2026-09-09T04:30:00Z", h_zh: "台灣", h_en: "Taiwan", h_ja: "台湾", h_f: "🇹🇼", a_zh: "泰國", a_en: "Thailand", a_ja: "タイ", a_f: "🇹🇭", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+                { id: "a18", utc: "2026-09-09T08:00:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "中國", a_en: "China", a_ja: "中国", a_f: "🇨🇳", type: "normal", stage_zh: "預賽", stage_en: "Pool Phase", stage_ja: "予選" },
+
+                // 亞錦賽決賽階段：8強、4強、銅牌戰、冠軍戰
+                { id: "a_f1", utc: "2026-09-10T06:30:00Z", h_zh: "泰國", h_en: "Thailand", h_ja: "タイ", h_f: "🇹🇭", a_zh: "澳洲", a_en: "Australia", a_ja: "オーストラリア", a_f: "🇦🇺", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f2", utc: "2026-09-10T10:30:00Z", h_zh: "韓國", h_en: "South Korea", h_ja: "韓国", h_f: "🇰🇷", a_zh: "中國", a_en: "China", a_ja: "中国", a_f: "🇨🇳", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f3", utc: "2026-09-11T06:30:00Z", h_zh: "伊朗", h_en: "Iran", h_ja: "イラン", h_f: "🇮🇷", a_zh: "台灣", a_en: "Taiwan", a_ja: "台湾", a_f: "🇹🇼", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f4", utc: "2026-09-11T10:30:00Z", h_zh: "日本", h_en: "Japan", h_ja: "日本", h_f: "🇯🇵", a_zh: "印度", a_en: "India", a_ja: "インド", a_f: "🇮🇳", type: "stage_match", zh_name: "8強賽", en_name: "Quarter Finals", ja_name: "準々決勝" },
+                { id: "a_f5", utc: "2026-09-12T06:30:00Z", type: "stage_match", zh_name: "4強賽 - 第1場", en_name: "Semi Finals - Match 1", ja_name: "準決勝 - 第1試合" },
+                { id: "a_f6", utc: "2026-09-12T10:30:00Z", type: "stage_match", zh_name: "4強賽 - 第2場", en_name: "Semi Finals - Match 2", ja_name: "準決勝 - 第2試合" },
+                { id: "a_f7", utc: "2026-09-13T06:30:00Z", type: "stage_match", zh_name: "🥉 銅牌戰", en_name: "🥉 Bronze Medal Match", ja_name: "🥉 3位決定戦" },
+                { id: "a_f8", utc: "2026-09-13T10:30:00Z", type: "stage_match", zh_name: "🥇 冠軍戰", en_name: "🥇 Gold Medal Match", ja_name: "🥇 決勝戦" }
+            ]
+        };
+        
+        const streamUrls = {
+            euro: "https://www.eurovolley.tv/pages/l9h2Cu-QQ",
+            asia: "https://tv.volleyballworld.com/"
+        };
+
+        const uiText = {
+            zh: { 
+                titleEuro: "2026歐錦賽", titleAsia: "2026亞錦賽", 
+                thDate: "日期", thTime: "時間", thMatch: "對戰組合", 
+                allDate: "-- 全日期 --", datePickerClear: "清除", datePickerDone: "完成", currentTz: "時區偵測：", 
+                textExportAll: "加入畫面中所有賽程",
+                textExportSelectedPrefix: "加入選取 (",
+                textExportSelectedSuffix: "場)",
+                filterCountry: "🔍 隊伍（可複選）", filterPool: "分組", poolAll: "分組", poolFinals: "決賽輪", 
+                sbLblTour: "🏆 選擇賽事 / Tournament:", sbLblLang: "🌐 語言 / Language:", sbLblGuide: "📖 說明 / Help:",
+                btnOpenGuide: "查看使用說明",
+                guideTitle: "📖 使用說明",
+                btnGuideClose: "我知道了",
+                localDateLabel: "(當地日期)",
+                tbdText: "未定",
+                streamTooltip: "前往觀看轉播",
+                calDetail: "2026排球賽事即時提醒，記得準時觀戰！",
+                btnLangText: "繁體中文"
+            },
+            en: { 
+                titleEuro: "CEV EuroVolley 2026", titleAsia: "AVC Men's Continental 2026", 
+                thDate: "Date", thTime: "Time", thMatch: "Matchup", 
+                allDate: "-- All Dates --", datePickerClear: "Clear", datePickerDone: "Done", currentTz: "Timezone:", 
+                textExportAll: "Add Shown Schedule",
+                textExportSelectedPrefix: "Add Selected (",
+                textExportSelectedSuffix: ")",
+                filterCountry: "🔍 Teams (select multiple)", filterPool: "POOL", poolAll: "POOL", poolFinals: "Finals", 
+                sbLblTour: "🏆 Tournament:", sbLblLang: "🌐 Language:", sbLblGuide: "📖 Guide:",
+                btnOpenGuide: "View User Guide",
+                guideTitle: "📖 User Guide",
+                btnGuideClose: "Got it",
+                localDateLabel: "(Local Date)",
+                tbdText: "TBD",
+                streamTooltip: "Watch Live Stream",
+                calDetail: "2026 Volleyball Match Reminder. Don't miss it!",
+                btnLangText: "English"
+            },
+            ja: { 
+                titleEuro: "欧州選手権 2026", titleAsia: "アジア選手権 2026", 
+                thDate: "日付", thTime: "時間", thMatch: "対戦カード", 
+                allDate: "-- 全日程 --", datePickerClear: "クリア", datePickerDone: "完了", currentTz: "タイムゾーン：", 
+                textExportAll: "表示中の全試合を追加",
+                textExportSelectedPrefix: "選択した試合を追加 (",
+                textExportSelectedSuffix: "件)",
+                filterCountry: "🔍 チーム（複数選択可）", filterPool: "グループ", poolAll: "グループ", poolFinals: "決勝ラウンド", 
+                sbLblTour: "🏆 大会選択:", sbLblLang: "🌐 言語 / Language:", sbLblGuide: "📖 ガイド:",
+                btnOpenGuide: "使い方を見る",
+                guideTitle: "📖 使い方ガイド",
+                btnGuideClose: "確認しました",
+                localDateLabel: "(現地時間)",
+                tbdText: "未定",
+                streamTooltip: "配信を視聴する",
+                calDetail: "2026バレーボール試合リマインダー。お見逃しなく！",
+                btnLangText: "日本語"
+            }
+        };
+
+        let currentMode = 'euro'; let currentLang = 'zh'; let modalLang = 'zh'; let activeTzOffset = 8;
+        const selectedMatches = new Set();
+
+        function detectBrowserLanguage() {
+            const navLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            if (navLang.startsWith('zh')) {
+                currentLang = 'zh';
+            } else if (navLang.startsWith('ja')) {
+                currentLang = 'ja';
+            } else {
+                currentLang = 'en';
+            }
+        }
+
+        function initApp() { 
+            detectBrowserLanguage();
+            detectBrowserTimezone(); 
+            switchTournament('euro'); 
+            initSwipeGestures();
+            
+            if (!localStorage.getItem('hasSeenGuide')) {
+                openGuideModal();
+                localStorage.setItem('hasSeenGuide', 'true');
+            }
+        }
+
+        /* 手勢開關側邊欄邏輯 */
+        function initSwipeGestures() {
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                
+                const deltaX = touchEndX - touchStartX;
+                const deltaY = touchEndY - touchStartY;
+
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                    const sb = document.getElementById("sidebar");
+                    const isOpen = sb.classList.contains("open");
+
+                    if (!isOpen && touchStartX < 50 && deltaX > 50) {
+                        toggleSidebar();
+                    } 
+                    else if (isOpen && deltaX < -50) {
+                        toggleSidebar();
+                    }
+                }
+            }, { passive: true });
+        }
+
+        function openInstagram(e) {
+            e.preventDefault();
+            const webUrl = "https://www.instagram.com/eggroll.25";
+            const appUrl = "instagram://user?username=eggroll.25";
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+            if (!isMobile) {
+                window.open(webUrl, '_blank');
+                return;
+            }
+
+            let hasLeft = false;
+            const onBlur = () => { hasLeft = true; };
+            window.addEventListener('blur', onBlur);
+
+            const timer = setTimeout(() => {
+                window.removeEventListener('blur', onBlur);
+                if (!hasLeft) {
+                    window.location.href = webUrl;
+                }
+            }, 1500);
+
+            window.location.href = appUrl;
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById("sidebar"); const overlay = document.getElementById("sidebarOverlay");
+            if(sb.classList.contains("open")) { sb.classList.remove("open"); overlay.classList.remove("show"); }
+            else { sb.classList.add("open"); overlay.classList.add("show"); }
+        }
+
+        function openGuideModal() {
+            modalLang = currentLang;
+            renderGuideContent();
+            document.getElementById("guideModal").classList.add("show");
+            if(document.getElementById("sidebar").classList.contains("open")) toggleSidebar();
+        }
+
+        function closeGuideModal() {
+            document.getElementById("guideModal").classList.remove("show");
+        }
+
+        function toggleModalLang() {
+            if (modalLang === 'zh') modalLang = 'en';
+            else if (modalLang === 'en') modalLang = 'ja';
+            else modalLang = 'zh';
+            renderGuideContent();
+        }
+
+        function renderGuideContent() {
+            const langKey = modalLang;
+            document.getElementById("guideTitle").innerText = uiText[langKey].guideTitle;
+            document.getElementById("btnGuideClose").innerText = uiText[langKey].btnGuideClose;
+            
+            let nextLangText = "English";
+            if (langKey === 'zh') nextLangText = "English";
+            else if (langKey === 'en') nextLangText = "日本語";
+            else if (langKey === 'ja') nextLangText = "中文";
+            document.getElementById("btnModalLangToggle").innerText = nextLangText;
+
+            const container = document.getElementById("guideContentBox");
+            if (langKey === 'zh') {
+                container.innerHTML = `
+                    <div class="guide-item">
+                        <div class="guide-title">🏆 賽事與語言切換</div>
+                        <div>點擊左上角選單 <span class="b-text">☰</span> 或 <span class="b-text">靠螢幕左側向右滑動</span>，可在側邊欄切換「歐錦賽 / 亞錦賽」與語言。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📺 線上轉播連結</div>
+                        <div>點擊標題右側的 <span class="b-text">📺</span> 符號即可前往當前賽事的官方轉播網站。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📅 加入行事曆功能</div>
+                        <div>
+                            1. <span class="b-text">加入畫面所有賽程</span>：點擊底部「加入畫面中所有賽程」按鈕即可。<br>
+                            2. <span class="b-text">自選特定場次</span>：直接點擊列表選擇比賽，再點擊底部出現的「加入選取 (X場)」按鈕。
+                        </div>
+                    </div>
+                    <div class="guide-item" style="background:#f1f5f9; border-left-color:#64748b;">
+                        <div class="guide-title">💡 溫馨提示</div>
+                        <div>您可隨時點擊選單 <span class="b-text">☰</span> 內「查看使用說明」重新開啟此說明。側邊欄支援手勢 <span class="b-text">右滑開啟、左滑關閉</span> 操作。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">⚠️ 問題回報</div>
+                        <div>若發現任何錯漏或有建議，可於側邊欄最下方點擊「回報問題」透過製作者 Instagram 聯繫。</div>
+                    </div>
+                `;
+            } else if (langKey === 'ja') {
+                container.innerHTML = `
+                    <div class="guide-item">
+                        <div class="guide-title">🏆 大会と言語の切り替え</div>
+                        <div>左上のメニュー <span class="b-text">☰</span> をタップするか、<span class="b-text">画面の左端から右へスワイプ</span> することで、サイドバーから大会や言語を切り替えることができます。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📺 ライブ配信リンク</div>
+                        <div>タイトル右側の <span class="b-text">📺</span> アイコンをタップすると、選択中の大会の公式配信サイトへ移動します。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📅 カレンダーに追加</div>
+                        <div>
+                            1. <span class="b-text">表示中の全日程を追加</span>：下部の「表示中の全試合を追加」ボタンをタップします。<br>
+                            2. <span class="b-text">特定の試合を選択</span>：一覧から試合をタップして選択し、下部に表示される「選択した試合を追加 (X件)」ボタンをタップします。
+                        </div>
+                    </div>
+                    <div class="guide-item" style="background:#f1f5f9; border-left-color:#64748b;">
+                        <div class="guide-title">💡 ヒント</div>
+                        <div>メニュー <span class="b-text">☰</span> 内の「使い方を見る」からいつでもこのガイドを再表示できます。サイドバーは <span class="b-text">右スワイプで開く・左スワイプで閉じる</span> ジェスチャーに対応しています。</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">⚠️ 不具合の報告</div>
+                        <div>誤りやご要望がございましたら、サイドバー最下部の「不具合を報告」から作者のInstagramへご連絡ください。</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="guide-item">
+                        <div class="guide-title">🏆 Tournaments & Languages</div>
+                        <div>Click top-left menu <span class="b-text">☰</span> or <span class="b-text">swipe right from left edge</span> to switch tournaments and languages.</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📺 Live Stream</div>
+                        <div>Click the <span class="b-text">📺</span> icon on the right side of the title to visit the official live broadcast website.</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">📅 Add to Calendar</div>
+                        <div>
+                            1. <span class="b-text">Add Shown Schedule</span>: Click "Add Shown Schedule" button at the bottom.<br>
+                            2. <span class="b-text">Custom Selection</span>: Click matches directly in list, then click "Add Selected (X)" at the bottom.
+                        </div>
+                    </div>
+                    <div class="guide-item" style="background:#f1f5f9; border-left-color:#64748b;">
+                        <div class="guide-title">💡 Helpful Tip</div>
+                        <div>Reopen guide anytime via menu <span class="b-text">☰</span>. Sidebar supports <span class="b-text">swipe right to open & left to close</span>.</div>
+                    </div>
+                    <div class="guide-item">
+                        <div class="guide-title">⚠️ Report Issues</div>
+                        <div>Click "Report Bug" at the bottom of sidebar to contact creator via Instagram if you spot errors.</div>
+                    </div>
+                `;
+            }
+        }
+
+        function detectBrowserTimezone() {
+            const offsetMinutes = new Date().getTimezoneOffset(); activeTzOffset = -offsetMinutes / 60;
+            const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            document.getElementById("tzStatusText").innerText = `🌐 ${uiText[currentLang].currentTz} ${tzName} (UTC${activeTzOffset >= 0 ? '+' : ''}${activeTzOffset})`;
+        }
+
+        function switchTournament(mode) {
+            currentMode = mode; 
+            document.body.className = mode === 'euro' ? 'theme-euro' : 'theme-asia';
+            clearCart();
+            document.getElementById("btnEuro").className = "sb-toggle-btn " + (mode === 'euro' ? 'active euro' : '');
+            document.getElementById("btnAsia").className = "sb-toggle-btn " + (mode === 'asia' ? 'active asia' : '');
+            
+            const streamBtn = document.getElementById("streamBtn");
+            streamBtn.href = streamUrls[mode];
+            streamBtn.title = uiText[currentLang].streamTooltip;
+
+            updateLabels(); generateCountryChips(); generateDateOptions(); generatePoolOptions(); renderTable();
+        }
+
+        function toggleLanguage() {
+            if (currentLang === 'zh') currentLang = 'en';
+            else if (currentLang === 'en') currentLang = 'ja';
+            else currentLang = 'zh';
+            
+            detectBrowserTimezone(); updateLabels(); generateDateOptions(); generatePoolOptions(); generateCountryChips(); renderTable(); updateCartUI();
+        }
+
+        function updateLabels() {
+            const lang = uiText[currentLang];
+            document.getElementById("textTitleMain").innerText = currentMode === 'euro' ? lang.titleEuro : lang.titleAsia;
+            document.getElementById("textTitleSub").innerText = currentMode === 'euro' ? "CEV EuroVolley 2026" : "AVC Volleyball Championship 2026";
+            document.getElementById("thDate").innerText = lang.thDate; document.getElementById("thTime").innerText = lang.thTime; 
+            document.getElementById("thMatch").innerText = lang.thMatch; 
+            document.getElementById("textExportAll").innerText = lang.textExportAll;
+            
+            document.getElementById("sbLblTour").innerText = lang.sbLblTour;
+            document.getElementById("sbLblLang").innerText = lang.sbLblLang;
+            document.getElementById("sbLblGuide").innerText = lang.sbLblGuide;
+            document.getElementById("btnOpenGuide").innerText = lang.btnOpenGuide;
+            document.getElementById("btnLang").innerText = lang.btnLangText;
+
+            document.getElementById("mainLblCountry").innerText = lang.filterCountry;
+            document.getElementById("dateFilterButton").setAttribute("aria-label", currentLang === 'zh' ? "日期" : currentLang === 'ja' ? "日付" : "Date");
+            document.getElementById("poolFilter").setAttribute("aria-label", lang.filterPool);
+            document.getElementById("calendarClearBtn").innerText = lang.datePickerClear;
+            document.getElementById("calendarDoneBtn").innerText = lang.datePickerDone;
+            renderCalendar();
+            
+            document.getElementById("streamBtn").title = lang.streamTooltip;
+        }
+
+        // 已套用的日期篩選（只有按下「完成」後才會更新）
+        let dateRangeStart = null;
+        let dateRangeEnd = null;
+
+        // 本次開啟月曆時的暫存選擇。重新開啟月曆即重新開始一次選擇流程，
+        // 但月曆仍會保留顯示上一次已套用的篩選狀態。
+        let draftDateStart = null;
+        let draftDateEnd = null;
+        let calendarSelectionDirty = false;
+        let calendarViewDate = new Date(2026, 8, 1);
+        let availableDateKeys = new Set();
+
+        function getMatchDateKey(match) {
+            if (match.type === 'normal' || match.type === 'stage_match') {
+                const matchDate = new Date(match.utc);
+                const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
+                return `${localDate.getUTCFullYear()}-${String(localDate.getUTCMonth()+1).padStart(2,'0')}-${String(localDate.getUTCDate()).padStart(2,'0')}`;
+            }
+            if (match.type === 'stage') {
+                const parts = String(match.local_d || '').split('/');
+                if (parts.length === 2) return `2026-${String(parts[0]).padStart(2,'0')}-${String(parts[1]).padStart(2,'0')}`;
+            }
+            return '';
+        }
+
+        function getDateLabel(dateKey, endKey = null) {
+            if (!dateKey) return uiText[currentLang].allDate;
+            const [y, m, d] = dateKey.split('-').map(Number);
+            if (endKey) {
+                return `${m}/${d} – ${Number(endKey.split('-')[1])}/${Number(endKey.split('-')[2])}`;
+            }
+            return `${m}/${d}`;
+        }
+
+        function generateDateOptions() {
+            availableDateKeys = new Set();
+            rawData[currentMode].forEach(match => {
+                const key = getMatchDateKey(match);
+                if (key) availableDateKeys.add(key);
+            });
+
+            const selected = document.getElementById('dateFilter').value;
+            dateRangeStart = null;
+            dateRangeEnd = null;
+            if (selected) {
+                const parts = selected.split('|');
+                dateRangeStart = parts[0] || null;
+                dateRangeEnd = parts[1] || null;
+                if (dateRangeStart) {
+                    const [y,m] = dateRangeStart.split('-').map(Number);
+                    calendarViewDate = new Date(y, m - 1, 1);
+                    if (!availableDateKeys.has(dateRangeStart)) {
+                        dateRangeStart = null;
+                        dateRangeEnd = null;
+                    }
+                }
+            }
+            draftDateStart = dateRangeStart;
+            draftDateEnd = dateRangeEnd;
+            calendarSelectionDirty = false;
+            updateDateFilterButton();
+            renderCalendar();
+        }
+
+        function updateDateFilterButton() {
+            const button = document.getElementById('dateFilterButton');
+            const hidden = document.getElementById('dateFilter');
+            if (!button || !hidden) return;
+            if (!dateRangeStart) {
+                hidden.value = '';
+                button.innerText = uiText[currentLang].allDate;
+            } else {
+                hidden.value = dateRangeEnd ? `${dateRangeStart}|${dateRangeEnd}` : dateRangeStart;
+                button.innerText = getDateLabel(dateRangeStart, dateRangeEnd);
+            }
+        }
+
+        function formatCalendarMonth(date) {
+            const formatter = new Intl.DateTimeFormat(currentLang === 'zh' ? 'zh-TW' : currentLang === 'ja' ? 'ja-JP' : 'en-US', { year: 'numeric', month: 'long' });
+            return formatter.format(date);
+        }
+
+        function getCalendarWeekdays() {
+            if (currentLang === 'zh') return ['日','一','二','三','四','五','六'];
+            if (currentLang === 'ja') return ['日','月','火','水','木','金','土'];
+            return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        }
+
+        function dateKeyFromParts(y, m, d) {
+            return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        }
+
+        function getCalendarSelection() {
+            const picker = document.getElementById('datePicker');
+            const isOpen = picker && picker.classList.contains('show');
+            if (isOpen && calendarSelectionDirty) {
+                return { start: draftDateStart, end: draftDateEnd };
+            }
+            return { start: dateRangeStart, end: dateRangeEnd };
+        }
+
+        function renderCalendar() {
+            const monthLabel = document.getElementById('calendarMonthLabel');
+            const weekdays = document.getElementById('calendarWeekdays');
+            const days = document.getElementById('calendarDays');
+            if (!monthLabel || !weekdays || !days) return;
+
+            monthLabel.innerText = formatCalendarMonth(calendarViewDate);
+            weekdays.innerHTML = getCalendarWeekdays().map(day => `<div class="calendar-weekday">${day}</div>`).join('');
+            days.innerHTML = '';
+
+            const selection = getCalendarSelection();
+            const selectedStart = selection.start;
+            const selectedEnd = selection.end;
+            const year = calendarViewDate.getFullYear();
+            const month = calendarViewDate.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDays = new Date(year, month, 0).getDate();
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            const today = new Date();
+            const todayKey = dateKeyFromParts(today.getFullYear(), today.getMonth()+1, today.getDate());
+
+            for (let i = 0; i < totalCells; i++) {
+                let cellYear = year;
+                let cellMonth = month;
+                let dayNumber;
+                let otherMonth = false;
+                if (i < firstDay) {
+                    dayNumber = prevDays - firstDay + i + 1;
+                    cellMonth--;
+                    otherMonth = true;
+                } else if (i >= firstDay + daysInMonth) {
+                    dayNumber = i - firstDay - daysInMonth + 1;
+                    cellMonth++;
+                    otherMonth = true;
+                } else {
+                    dayNumber = i - firstDay + 1;
+                }
+                const cellDate = new Date(cellYear, cellMonth, dayNumber);
+                const key = dateKeyFromParts(cellDate.getFullYear(), cellDate.getMonth()+1, cellDate.getDate());
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'calendar-day';
+                btn.innerText = dayNumber;
+                btn.setAttribute('data-date', key);
+                if (otherMonth) btn.classList.add('other-month');
+                if (availableDateKeys.has(key)) btn.classList.add('has-match');
+                if (key === todayKey) btn.classList.add('today');
+                if (selectedStart && key === selectedStart && selectedEnd && key !== selectedEnd) btn.classList.add('range-start');
+                if (selectedEnd && key === selectedEnd && key !== selectedStart) btn.classList.add('range-end');
+                if (selectedStart && selectedEnd && key > selectedStart && key < selectedEnd) btn.classList.add('in-range');
+                if (selectedStart && selectedEnd && key === selectedStart && selectedStart === selectedEnd) btn.classList.add('single-selected');
+                if (selectedStart && !selectedEnd && key === selectedStart) btn.classList.add('single-selected');
+                if (selectedStart && selectedEnd && key === selectedStart) btn.classList.add('range-start');
+                if (selectedStart && selectedEnd && key === selectedEnd) btn.classList.add('range-end');
+                btn.onclick = () => selectCalendarDate(key);
+                days.appendChild(btn);
+            }
+        }
+
+        function selectCalendarDate(key) {
+            // 日期點擊只修改本次開啟月曆的暫存值，不立即套用，也不關閉月曆。
+            if (!calendarSelectionDirty) {
+                draftDateStart = key;
+                draftDateEnd = null;
+                calendarSelectionDirty = true;
+                renderCalendar();
+                return;
+            }
+
+            if (!draftDateStart) {
+                draftDateStart = key;
+                draftDateEnd = null;
+            } else if (!draftDateEnd) {
+                // 單日選擇：再點同一天＝取消；點不同日期＝建立日期區間。
+                if (key === draftDateStart) {
+                    draftDateStart = null;
+                } else if (key < draftDateStart) {
+                    draftDateEnd = draftDateStart;
+                    draftDateStart = key;
+                } else {
+                    draftDateEnd = key;
+                }
+            } else {
+                // 已有區間：只有再次點擊已選的起／終點才取消該端。
+                // 點擊其他日期則開始一個新的選擇。
+                if (key === draftDateStart) {
+                    draftDateStart = draftDateEnd;
+                    draftDateEnd = null;
+                } else if (key === draftDateEnd) {
+                    draftDateEnd = null;
+                } else {
+                    draftDateStart = key;
+                    draftDateEnd = null;
+                }
+            }
+
+            renderCalendar();
+        }
+
+        function changeCalendarMonth(delta) {
+            calendarViewDate = new Date(calendarViewDate.getFullYear(), calendarViewDate.getMonth() + delta, 1);
+            renderCalendar();
+        }
+
+        function toggleDatePicker() {
+            const picker = document.getElementById('datePicker');
+            const button = document.getElementById('dateFilterButton');
+            const isOpen = picker.classList.toggle('show');
+            button.setAttribute('aria-expanded', String(isOpen));
+
+            if (isOpen) {
+                // 每次重新開啟：先顯示目前已套用的日期，但重新開始本次選擇流程。
+                draftDateStart = dateRangeStart;
+                draftDateEnd = dateRangeEnd;
+                calendarSelectionDirty = false;
+                renderCalendar();
+            } else {
+                // 手動關閉：放棄本次尚未套用的暫存選擇。
+                draftDateStart = dateRangeStart;
+                draftDateEnd = dateRangeEnd;
+                calendarSelectionDirty = false;
+                renderCalendar();
+            }
+        }
+
+        function closeDatePicker() {
+            const picker = document.getElementById('datePicker');
+            const button = document.getElementById('dateFilterButton');
+            picker.classList.remove('show');
+            button.setAttribute('aria-expanded', 'false');
+
+            // 關閉月曆時永遠回到最後一次已套用的狀態。
+            draftDateStart = dateRangeStart;
+            draftDateEnd = dateRangeEnd;
+            calendarSelectionDirty = false;
+            renderCalendar();
+        }
+
+        function clearDateSelection() {
+            // 清除是立即動作：取消目前篩選、關閉月曆並顯示全部賽程。
+            dateRangeStart = null;
+            dateRangeEnd = null;
+            draftDateStart = null;
+            draftDateEnd = null;
+            calendarSelectionDirty = false;
+            document.getElementById('dateFilter').value = '';
+            updateDateFilterButton();
+            renderTable();
+            closeDatePicker();
+        }
+
+        function applyDateSelection() {
+            // 未點選任何日期：代表本次沒有修改，維持上一次的篩選。
+            if (!calendarSelectionDirty) {
+                closeDatePicker();
+                return;
+            }
+
+            dateRangeStart = draftDateStart;
+            dateRangeEnd = draftDateEnd;
+
+            if (!dateRangeStart) {
+                document.getElementById('dateFilter').value = '';
+            } else {
+                document.getElementById('dateFilter').value =
+                    dateRangeEnd ? `${dateRangeStart}|${dateRangeEnd}` : dateRangeStart;
+            }
+
+            updateDateFilterButton();
+            renderTable();
+            closeDatePicker();
+        }
+
+        document.addEventListener('click', (event) => {
+            const control = document.getElementById('dateFilterControl');
+            const picker = document.getElementById('datePicker');
+            if (!control || !picker || !picker.classList.contains('show')) return;
+
+            // 使用 click 的 composedPath 判斷原始點擊位置。
+            // 月曆日期按鈕點擊後會觸發 renderCalendar() 重建 DOM，
+            // 因此不能在這裡只用 control.contains(event.target)，否則會被誤判成點擊外部。
+            const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+            const clickedInsideControl = path.length ? path.includes(control) : control.contains(event.target);
+            if (!clickedInsideControl) {
+                // 點擊月曆外部：取消本次尚未完成的修改，保留上一次已套用的篩選。
+                closeDatePicker();
+            }
+        });
+
+        const poolTeams = {
+            euro: {
+                A: ["義大利", "瑞典", "斯洛維尼亞", "捷克", "希臘", "斯洛伐克"],
+                B: ["保加利亞", "北馬其頓", "波蘭", "烏克蘭", "葡萄牙", "以色列"],
+                C: ["芬蘭", "愛沙尼亞", "塞爾維亞", "比利時", "荷蘭", "丹麥"],
+                D: ["羅馬尼亞", "拉脫維亞", "法國", "德國", "土耳其", "瑞士"]
+            },
+            asia: {
+                A: ["澳洲", "巴林", "日本", "阿曼"],
+                B: ["中國", "印度", "伊朗", "紐西蘭"],
+                C: ["韓國", "卡達", "泰國", "台灣"]
+            }
+        };
+
+        function getMatchPool(match) {
+            if (match.type === 'stage' || match.type === 'stage_match') return 'finals';
+            if (match.type !== 'normal') return '';
+            const pools = poolTeams[currentMode] || {};
+            for (const [pool, teams] of Object.entries(pools)) {
+                if (teams.includes(match.h_zh) && teams.includes(match.a_zh)) return pool;
+            }
+            return '';
+        }
+
+        function getPoolLabel(pool) {
+            if (!pool) return '';
+            if (pool === 'finals') return uiText[currentLang].poolFinals;
+            return currentLang === 'ja' ? `プール ${pool}` : `Pool ${pool}`;
+        }
+
+        function generatePoolOptions() {
+            const select = document.getElementById("poolFilter");
+            const cachedVal = select.value;
+            const options = currentMode === 'euro' ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C'];
+            select.innerHTML = `<option value="">${uiText[currentLang].poolAll}</option>`;
+            options.forEach(pool => {
+                select.innerHTML += `<option value="${pool}">${currentLang === 'ja' ? `プール ${pool}` : `Pool ${pool}`}</option>`;
+            });
+            select.innerHTML += `<option value="finals">${uiText[currentLang].poolFinals}</option>`;
+            if (Array.from(select.options).some(o => o.value === cachedVal)) select.value = cachedVal;
+        }
+
+        function generateCountryChips() {
+            const container = document.getElementById("countryContainer"); container.innerHTML = ""; 
+            const countries = new Map();
+            
+            rawData[currentMode].forEach(m => { 
+                if(m.type === 'normal') { 
+                    countries.set(m.h_zh, { en: m.h_en, ja: m.h_ja });
+                    countries.set(m.a_zh, { en: m.a_en, ja: m.a_ja });
+                } 
+            });
+
+            const collator = currentLang === 'en'
+                ? new Intl.Collator('en', { sensitivity: 'base' })
+                : currentLang === 'ja'
+                    ? new Intl.Collator('ja', { usage: 'sort', sensitivity: 'base' })
+                    : new Intl.Collator('zh-Hant-u-co-stroke', { usage: 'sort', sensitivity: 'base' });
+
+            Array.from(countries.entries()).sort((a, b) => {
+                const nameA = currentLang === 'en' ? a[1].en : currentLang === 'ja' ? a[1].ja : a[0];
+                const nameB = currentLang === 'en' ? b[1].en : currentLang === 'ja' ? b[1].ja : b[0];
+                return collator.compare(nameA, nameB);
+            }).forEach(([zhName, names]) => {
+                const chip = document.createElement("div"); 
+                chip.className = "country-chip"; 
+                
+                let displayName = zhName;
+                if (currentLang === 'en') displayName = names.en;
+                else if (currentLang === 'ja') displayName = names.ja;
+
+                chip.innerText = displayName;
+                chip.setAttribute('data-id', zhName);
+                
+                chip.onclick = () => {
+                    chip.classList.toggle('selected');
+                    renderTable();
+                };
+                container.appendChild(chip);
+            });
+        }
+
+        function toggleRowSelection(id) {
+            const row = document.getElementById(`row-${id}`);
+            if (selectedMatches.has(id)) { selectedMatches.delete(id); if(row) row.classList.remove("selected-row"); } 
+            else { selectedMatches.add(id); if(row) row.classList.add("selected-row"); }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const btnSelected = document.getElementById("btnExportSelected");
+            const textSelected = document.getElementById("textExportSelected");
+            
+            if (selectedMatches.size > 0) {
+                textSelected.innerText = `${uiText[currentLang].textExportSelectedPrefix}${selectedMatches.size}${uiText[currentLang].textExportSelectedSuffix}`;
+                btnSelected.style.display = "flex";
+            } else { 
+                btnSelected.style.display = "none";
+            }
+        }
+
+        function clearCart() { selectedMatches.clear(); updateCartUI(); Array.from(document.querySelectorAll("tr.selected-row")).forEach(r => r.classList.remove("selected-row")); }
+        
+        function getFilteredMatches() {
+            const selectedDate = document.getElementById("dateFilter").value;
+            const selectedDateParts = selectedDate ? selectedDate.split('|') : [];
+            const selectedStart = selectedDateParts[0] || '';
+            const selectedEnd = selectedDateParts[1] || selectedStart;
+            const selectedPool = document.getElementById("poolFilter").value;
+            const activeChips = Array.from(document.querySelectorAll('.country-chip.selected')).map(el => el.getAttribute('data-id'));
+
+            let matches = [...rawData[currentMode]];
+
+            // 無篩選時維持最直覺的時間軸排序；套用任何篩選後也仍以時間為主要排序。
+            matches.sort((a, b) => {
+                const timeA = a.utc ? new Date(a.utc).getTime() : new Date(`2026/${a.local_d}`).getTime();
+                const timeB = b.utc ? new Date(b.utc).getTime() : new Date(`2026/${b.local_d}`).getTime();
+                return timeA - timeB;
+            });
+
+            return matches.filter(match => {
+                const dateKey = getMatchDateKey(match);
+
+                if (selectedStart && (dateKey < selectedStart || dateKey > selectedEnd)) return false;
+
+                const matchPool = getMatchPool(match);
+                if (selectedPool && matchPool !== selectedPool) return false;
+                
+                if (activeChips.length > 0) {
+                    if (match.type !== 'normal') return false;
+                    if (!activeChips.includes(match.h_zh) && !activeChips.includes(match.a_zh)) return false;
+                }
+
+                return true;
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("tableBody"); tbody.innerHTML = "";
+            const matchesToRender = getFilteredMatches();
+
+            matchesToRender.forEach(match => {
+                const tr = document.createElement("tr"); 
+                tr.id = `row-${match.id}`;
+                const isSelected = selectedMatches.has(match.id);
+                if (isSelected) tr.classList.add("selected-row");
+                tr.onclick = () => toggleRowSelection(match.id);
+
+                if (match.type === 'normal') {
+                    const matchDate = new Date(match.utc); 
+                    const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
+                    const month = String(localDate.getUTCMonth() + 1).padStart(2, '0'); 
+                    const dateNum = String(localDate.getUTCDate()).padStart(2, '0');
+                    const hours = String(localDate.getUTCHours()).padStart(2, '0'); 
+                    const minutes = String(localDate.getUTCMinutes()).padStart(2, '0');
+                    const weekDaysZh = ["日", "一", "二", "三", "四", "五", "六"]; 
+                    const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                    const weekDaysJa = ["日", "月", "火", "水", "木", "金", "土"];
+
+                    let wDisplay = weekDaysZh[localDate.getUTCDay()];
+                    if (currentLang === 'en') wDisplay = weekDaysEn[localDate.getUTCDay()];
+                    else if (currentLang === 'ja') wDisplay = weekDaysJa[localDate.getUTCDay()];
+
+                    const dateDisplay = `${month}/${dateNum} (${wDisplay})`;
+                    
+                    let hName = match.h_zh;
+                    let aName = match.a_zh;
+                    if (currentLang === 'en') { hName = match.h_en; aName = match.a_en; }
+                    else if (currentLang === 'ja') { hName = match.h_ja; aName = match.a_ja; }
+
+                    const poolLabel = getPoolLabel(getMatchPool(match));
+                    tr.innerHTML = `
+                        <td>${dateDisplay}</td>
+                        <td style="font-weight:bold;">${hours}:${minutes}</td>
+                        <td>
+                            <div class="match-cell">
+                                <div class="match-pair">
+                                    <span class="team-text-box"><span>${match.h_f}</span><span class="team-name">${hName}</span></span>
+                                    <span class="vs-label">VS</span>
+                                    <span class="team-text-box"><span>${match.a_f}</span><span class="team-name">${aName}</span></span>
+                                </div>
+                                <div class="match-stage-note">${poolLabel}</div>
+                            </div>
+                        </td>`;
+                } else if (match.type === 'stage') {
+                    let wDisplay = match.local_w;
+                    if (currentLang === 'en') wDisplay = match.local_w_en;
+                    else if (currentLang === 'ja') wDisplay = match.local_w_ja;
+
+                    let stageName = match.zh_name;
+                    if (currentLang === 'en') stageName = match.en_name;
+                    else if (currentLang === 'ja') stageName = match.ja_name;
+
+                    tr.innerHTML = `
+                        <td>${match.local_d} (${wDisplay})<span class="sub-text-note">${uiText[currentLang].localDateLabel}</span></td>
+                        <td style="color:#64748b;">${uiText[currentLang].tbdText}</td>
+                        <td style="font-weight:700; color:#475569;">${stageName}</td>`;
+                } else if (match.type === 'stage_match') {
+                    const matchDate = new Date(match.utc); 
+                    const localDate = new Date(matchDate.getTime() + (activeTzOffset * 60 * 60 * 1000));
+                    const month = String(localDate.getUTCMonth() + 1).padStart(2, '0'); 
+                    const dateNum = String(localDate.getUTCDate()).padStart(2, '0');
+                    const hours = String(localDate.getUTCHours()).padStart(2, '0'); 
+                    const minutes = String(localDate.getUTCMinutes()).padStart(2, '0');
+                    const weekDaysZh = ["日", "一", "二", "三", "四", "五", "六"]; 
+                    const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                    const weekDaysJa = ["日", "月", "火", "水", "木", "金", "土"];
+
+                    let wDisplay = weekDaysZh[localDate.getUTCDay()];
+                    if (currentLang === 'en') wDisplay = weekDaysEn[localDate.getUTCDay()];
+                    else if (currentLang === 'ja') wDisplay = weekDaysJa[localDate.getUTCDay()];
+
+                    const dateDisplay = `${month}/${dateNum} (${wDisplay})`;
+
+                    let stageName = match.zh_name;
+                    if (currentLang === 'en') stageName = match.en_name;
+                    else if (currentLang === 'ja') stageName = match.ja_name;
+
+                    const hasTeams = match.h_zh && match.a_zh;
+                    let siteName = match.site_zh || '';
+                    if (currentLang === 'en') siteName = match.site_en || '';
+                    else if (currentLang === 'ja') siteName = match.site_ja || '';
+
+                    let stageLabel = stageName;
+                    if (siteName) stageLabel += `｜${siteName}`;
+
+                    let stageMatchContent = `<div class="stage-match-label">${stageLabel}</div>`;
+                    if (hasTeams) {
+                        let stageHome = match.h_zh;
+                        let stageAway = match.a_zh;
+                        if (currentLang === 'en') { stageHome = match.h_en; stageAway = match.a_en; }
+                        else if (currentLang === 'ja') { stageHome = match.h_ja; stageAway = match.a_ja; }
+                        stageMatchContent = `
+                            <div class="match-cell">
+                                <div class="match-pair">
+                                    <span class="team-text-box"><span>${match.h_f || ''}</span><span class="team-name">${stageHome}</span></span>
+                                    <span class="vs-label">VS</span>
+                                    <span class="team-text-box"><span>${match.a_f || ''}</span><span class="team-name">${stageAway}</span></span>
+                                </div>
+                                <div class="match-stage-note">${stageLabel}</div>
+                            </div>`;
+                    }
+                    tr.innerHTML = `
+                        <td>${dateDisplay}</td>
+                        <td style="font-weight:bold;">${hours}:${minutes}</td>
+                        <td>${stageMatchContent}</td>`;
+                }
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleFilteredCalendarExport() {
+            const matchesToDownload = getFilteredMatches();
+            if (matchesToDownload.length === 0) {
+                let msg = "目前畫面中沒有可加入的賽程！";
+                if (currentLang === 'en') msg = "No matches shown to add!";
+                else if (currentLang === 'ja') msg = "表示中の試合がありません！";
+                alert(msg);
+                return;
+            }
+            exportMatchesToCalendar(matchesToDownload, currentMode + "_schedule");
+        }
+
+        function handleCartCalendarExport() {
+            const allMatches = [...rawData.euro, ...rawData.asia];
+            const matchesToDownload = allMatches.filter(m => selectedMatches.has(m.id));
+            exportMatchesToCalendar(matchesToDownload, "my_selected_schedule");
+            clearCart();
+        }
+
+        function exportMatchesToCalendar(matches, filename) {
+            const validMatches = matches.filter(m => m.utc);
+            if (validMatches.length === 0) {
+                let msg = "選取的賽程尚未確認具體時間！";
+                if (currentLang === 'en') msg = "Selected matches do not have set times yet!";
+                else if (currentLang === 'ja') msg = "選択した試合の開始時間がまだ決定していません！";
+                alert(msg);
+                return;
+            }
+
+            const formattedEvents = validMatches.map(m => {
+                let prefix = "";
+                if (currentLang === 'zh') {
+                    prefix = currentMode === 'euro' ? '【歐錦賽】' : '【亞錦賽】';
+                } else if (currentLang === 'ja') {
+                    prefix = currentMode === 'euro' ? '【欧州選手権】' : '【アジア選手権】';
+                } else {
+                    prefix = currentMode === 'euro' ? '[EuroVolley]' : '[AVC]';
+                }
+
+                let title = "";
+                if (m.type === 'normal') {
+                    let stage = m.stage_zh;
+                    let home = m.h_zh;
+                    let away = m.a_zh;
+                    if (currentLang === 'en') { stage = m.stage_en; home = m.h_en; away = m.a_en; }
+                    else if (currentLang === 'ja') { stage = m.stage_ja; home = m.h_ja; away = m.a_ja; }
+
+                    title = `${prefix}${stage} - ${home} VS ${away}`;
+                } else {
+                    let stageName = m.zh_name;
+                    let home = m.h_zh;
+                    let away = m.a_zh;
+                    if (currentLang === 'en') { stageName = m.en_name; home = m.h_en; away = m.a_en; }
+                    else if (currentLang === 'ja') { stageName = m.ja_name; home = m.h_ja; away = m.a_ja; }
+
+                    if (m.type === 'stage_match' && home && away) {
+                        title = `${prefix}${stageName} - ${home} VS ${away}`;
+                    } else {
+                        title = `${prefix}${stageName}`;
+                    }
+                }
+                return { title, utc: m.utc };
+            });
+
+            const detailText = uiText[currentLang].calDetail;
+
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid && formattedEvents.length === 1) {
+                const ev = formattedEvents[0];
+                const s = new Date(ev.utc);
+                const e = new Date(s.getTime() + (2 * 60 * 60 * 1000));
+                const formatG = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '');
+                const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.title)}&dates=${formatG(s)}/${formatG(e)}&details=${encodeURIComponent(detailText)}`;
+                window.open(gUrl, '_blank');
+            } else {
+                downloadIcs(formattedEvents, filename, detailText);
+            }
+        }
+
+        function downloadIcs(matches, filename, detailText) {
+            let icsLines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Volleyball Schedule//EN"];
+            matches.forEach(m => {
+                const s = new Date(m.utc); 
+                const e = new Date(s.getTime() + (2 * 60 * 60 * 1000)); 
+                const fI = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                icsLines.push(
+                    "BEGIN:VEVENT",
+                    `DTSTART:${fI(s)}`,
+                    `DTEND:${fI(e)}`,
+                    `SUMMARY:${m.title}`,
+                    `DESCRIPTION:${detailText}`,
+                    "BEGIN:VALARM",
+                    "TRIGGER:-PT15M",
+                    "ACTION:DISPLAY",
+                    "DESCRIPTION:Reminder",
+                    "END:VALARM",
+                    "END:VEVENT"
+                );
+            });
+            icsLines.push("END:VCALENDAR");
+
+            const blob = new Blob([icsLines.join("\n")], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a'); 
+            link.href = URL.createObjectURL(blob); 
+            link.download = `${filename}.ics`;
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link);
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
